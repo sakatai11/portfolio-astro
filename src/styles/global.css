@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  /* Refined Color Palette - Light Theme */
+  --color-bg: #ffffff;
+  --color-text: #121212;
+  --color-accent: #666666;
+  --color-border: #e0e0e0;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-text);
+    scroll-behavior: smooth;
+    /* English Typography */
+    letter-spacing: 0.1em;
+  }
+
+  /* Japanese Typography Override if needed, but base settings cover it. 
+     We apply specific line-heights to text blocks. */
+
+  body {
+    @apply min-h-screen flex flex-col m-0 p-0 leading-relaxed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+    @apply m-0 font-normal tracking-wide;
+  }
+
+  p {
+    @apply leading-[2em];
+    /* Japanese text readability */
+  }
+
+  a {
+    @apply transition-colors duration-300;
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+}

@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import PhotoList from '../components/PhotoList';
+import Timeline from '../components/Timeline.astro';
+import Contents from '../components/Contents.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Taichi Sakai | Photography Portfolio">
+	<Header />
+	<main>
+		<Hero />
+		<PhotoList client:load />
+		<Timeline />
+		<Contents />
+	</main>
+	<Footer />
+</Layout>
