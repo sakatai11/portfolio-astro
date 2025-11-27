@@ -1,28 +1,36 @@
 ---
 const events = [
-	{ year: '2025', image: 'https://picsum.photos/seed/timeline1/800/500' },
-	{ year: '2024', image: 'https://picsum.photos/seed/timeline2/800/500' },
-	{ year: '2023', image: 'https://picsum.photos/seed/timeline3/800/500' },
+	{ year: "2025", image: "https://picsum.photos/seed/timeline1/800/500" },
+	{ year: "2024", image: "https://picsum.photos/seed/timeline2/800/500" },
+	{ year: "2023", image: "https://picsum.photos/seed/timeline3/800/500" },
 ];
 ---
 
-<section class="max-w-[1000px] mx-auto px-8 py-20">
-	<h2 class="text-3xl font-sans tracking-widest uppercase mb-20 text-left">TIMELINE</h2>
+<section class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] py-20">
+	<h2 class="text-3xl font-sans tracking-widest uppercase mb-20 text-left">
+		TIMELINE
+	</h2>
 
 	<div class="space-y-28">
-		{events.map((event, index) => (
-			<div class={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-				<div class="w-full md:w-1/2">
-					<img 
-						src={event.image} 
-						alt={event.year} 
-						class="w-full aspect-[3/2] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
-					/>
+		{
+			events.map((event, index) => (
+				<div
+					class={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${index % 2 === 1 ? "md:flex-row-reverse" : ""}`}
+				>
+					<div class="w-full md:w-1/2">
+						<img
+							src={event.image}
+							alt={event.year}
+							class="w-full aspect-[3/2] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+						/>
+					</div>
+					<div class="w-full md:w-1/2 text-center">
+						<span class="text-4xl font-light tracking-widest text-[var(--color-text)]">
+							{event.year}
+						</span>
+					</div>
 				</div>
-				<div class="w-full md:w-1/2 text-center">
-					<span class="text-4xl font-light tracking-widest text-[var(--color-text)]">{event.year}</span>
-				</div>
-			</div>
-		))}
+			))
+		}
 	</div>
 </section>

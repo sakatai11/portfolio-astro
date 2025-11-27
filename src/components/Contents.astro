@@ -1,28 +1,32 @@
 ---
 const contents = [
-	{ id: 1, src: 'https://picsum.photos/seed/content1/600/600' },
-	{ id: 2, src: 'https://picsum.photos/seed/content2/600/600' },
-	{ id: 3, src: 'https://picsum.photos/seed/content3/600/600' },
-	{ id: 4, src: 'https://picsum.photos/seed/content4/600/600' },
-	{ id: 5, src: 'https://picsum.photos/seed/content5/600/600' },
-	{ id: 6, src: 'https://picsum.photos/seed/content6/600/600' },
-	{ id: 7, src: 'https://picsum.photos/seed/content7/600/600' },
-	{ id: 8, src: 'https://picsum.photos/seed/content8/600/600' },
+	{ id: 1, src: "https://picsum.photos/seed/content1/600/600" },
+	{ id: 2, src: "https://picsum.photos/seed/content2/600/600" },
+	{ id: 3, src: "https://picsum.photos/seed/content3/600/600" },
+	{ id: 4, src: "https://picsum.photos/seed/content4/600/600" },
+	{ id: 5, src: "https://picsum.photos/seed/content5/600/600" },
+	{ id: 6, src: "https://picsum.photos/seed/content6/600/600" },
+	{ id: 7, src: "https://picsum.photos/seed/content7/600/600" },
+	{ id: 8, src: "https://picsum.photos/seed/content8/600/600" },
 ];
 ---
 
-<section class="max-w-[1200px] mx-auto px-8 py-20">
-	<h2 class="text-3xl font-sans tracking-widest uppercase mb-12 text-left">CONTENTS</h2>
+<section class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] py-[80px]">
+	<h2 class="text-3xl font-sans tracking-widest uppercase mb-12 text-left">
+		CONTENTS
+	</h2>
 
-	<div class="grid grid-cols-2 md:grid-cols-4 gap-28">
-		{contents.map((content) => (
-			<div class="aspect-square overflow-hidden cursor-pointer group">
-				<img 
-					src={content.src} 
-					alt="Content" 
-					class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:opacity-80"
-				/>
-			</div>
-		))}
+	<div class="grid grid-cols-2 md:grid-cols-4 gap-[7.8vw]">
+		{
+			contents.map((content) => (
+				<div class="aspect-square overflow-hidden cursor-pointer group">
+					<img
+						src={content.src}
+						alt="Content"
+						class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:opacity-80"
+					/>
+				</div>
+			))
+		}
 	</div>
 </section>
