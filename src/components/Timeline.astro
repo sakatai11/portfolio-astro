@@ -15,7 +15,7 @@ const events = [
 	<div class="flex flex-col gap-[256px]">
 		{
 			events.map((event, index) => (
-				<FadeIn client:visible>
+				<FadeIn client:visible opacityDuration={1}>
 					<div
 						class={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${index % 2 === 1 ? "md:flex-row-reverse" : ""}`}
 					>

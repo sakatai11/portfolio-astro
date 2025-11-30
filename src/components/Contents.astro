@@ -20,7 +20,7 @@ const contents = [
 	<div class="grid grid-cols-2 md:grid-cols-4 gap-[7.8vw]">
 		{
 			contents.map((content, index) => (
-				<FadeIn client:visible delay={index * 0.05}>
+				<FadeIn client:visible delay={index * 0.1} opacityDuration={0.5}>
 					<div class="aspect-square overflow-hidden cursor-pointer group">
 						<img
 							src={content.src}
