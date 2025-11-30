@@ -1,4 +1,5 @@
 ---
+import FadeIn from "./FadeIn.tsx";
 const photos = [
   {
     id: 1,
@@ -33,21 +34,20 @@ const photos = [
 ];
 ---
 
-<section class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] py-[80px]">
-  <div class="flex justify-between items-end mb-12">
-    <h2 class="text-3xl font-sans tracking-widest uppercase">PHOTO LIST</h2>
-    <a
-      href="#"
-      class="text-xs text-[var(--color-accent)] hover:text-black transition-colors tracking-widest"
-      >すべての写真を見る</a
-    >
-  </div>
+<section
+  class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] pt-[160px] pb-[80px]"
+>
+  <h2 class="text-3xl font-sans tracking-widest uppercase mb-24 text-center">
+    PHOTO LIST
+  </h2>
 
   <div class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
     {
       photos.map((photo, index) => (
-        <div
-          class={`group cursor-pointer ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
+        <FadeIn
+          client:visible
+          delay={index * 0.2}
+          className={`group cursor-pointer ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
         >
           <div class="overflow-hidden mb-4">
             <img
@@ -60,8 +60,30 @@ const photos = [
           <p class="text-xs text-[var(--color-accent)] tracking-wider">
             {photo.date}
           </p>
-        </div>
+        </FadeIn>
       ))
     }
+  </div>
+
+  <div class="mt-20 text-center">
+    <a
+      href="#"
+      class="inline-flex items-center justify-center relative border border-[var(--color-border)] px-6 py-4 w-64 hover:bg-gray-50 transition-colors group"
+    >
+      <span class="text-sm tracking-widest uppercase">View More</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 absolute right-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+      </svg>
+    </a>
   </div>
 </section>

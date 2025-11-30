@@ -1,4 +1,5 @@
 ---
+import FadeIn from "./FadeIn.tsx";
 const contents = [
 	{ id: 1, src: "https://picsum.photos/seed/content1/600/600" },
 	{ id: 2, src: "https://picsum.photos/seed/content2/600/600" },
@@ -12,20 +13,22 @@ const contents = [
 ---
 
 <section class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] py-[80px]">
-	<h2 class="text-3xl font-sans tracking-widest uppercase mb-12 text-left">
+	<h2 class="text-3xl font-sans tracking-widest uppercase mb-24 text-center">
 		CONTENTS
 	</h2>
 
 	<div class="grid grid-cols-2 md:grid-cols-4 gap-[7.8vw]">
 		{
-			contents.map((content) => (
-				<div class="aspect-square overflow-hidden cursor-pointer group">
-					<img
-						src={content.src}
-						alt="Content"
-						class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:opacity-80"
-					/>
-				</div>
+			contents.map((content, index) => (
+				<FadeIn client:visible delay={index * 0.05}>
+					<div class="aspect-square overflow-hidden cursor-pointer group">
+						<img
+							src={content.src}
+							alt="Content"
+							class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:opacity-80"
+						/>
+					</div>
+				</FadeIn>
 			))
 		}
 	</div>
