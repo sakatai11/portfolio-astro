@@ -16,7 +16,7 @@ export default function FadeIn({
   delay = 0,
   duration = 2.0,
   opacityDuration,
-  y = 30,
+  y = 0,
   viewportMargin = "-300px",
   className = "",
 }: FadeInProps & { opacityDuration?: number; viewportMargin?: string }) {
