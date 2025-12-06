@@ -1,44 +1,7 @@
 ---
 import FadeIn from "./FadeIn.tsx";
-const photos = [
-  {
-    id: 1,
-    src: "https://picsum.photos/seed/list1/1200/800",
-    title: "タイトル",
-    label: ["旅行"],
-    date: "2024.10.10",
-  },
-  {
-    id: 2,
-    src: "https://picsum.photos/seed/list2/1200/800",
-    title: "タイトル",
-    label: ["旅行", "雑記"],
-    date: "2024.10.10",
-  },
-  {
-    id: 3,
-    src: "https://picsum.photos/seed/list3/1200/800",
-    title: "タイトル",
-    label: ["雑記"],
-
-    date: "2024.10.10",
-  },
-  {
-    id: 4,
-    src: "https://picsum.photos/seed/list4/1200/800",
-    title: "タイトル",
-    label: ["スポーツ"],
-    date: "2024.10.10",
-  },
-  {
-    id: 5,
-    src: "https://picsum.photos/seed/list5/1200/800",
-    title: "タイトル",
-    label: ["スポーツ", "雑記"],
-
-    date: "2024.10.10",
-  },
-];
+import { PHOTOS } from "@/mocks/constants";
+const photos = PHOTOS;
 ---
 
 <section
