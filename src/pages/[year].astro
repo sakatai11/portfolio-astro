@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { EVENTS } from "@/mocks/constants";
+
+export async function getStaticPaths() {
+  // 1️⃣ Extract unique years from EVENTS
+  const uniqueYears = [...new Set(EVENTS.map((event) => event.year))];
+
+  // 2️⃣ Build static paths for each year
+  return uniqueYears.map((year) => {
+    const eventsForYear = EVENTS.filter((event) => event.year === year);
+    return {
+      params: { year },
+      props: {
+        year,
+        events: eventsForYear[0],
+      },
+    };
+  });
+}
+
+const { year, events } = Astro.props;
+---
+
+<Layout title={`Timeline ${year} | Taichi Sakai`}>
+  <Header />
+  <main class="py-12">
+    <div class="container mx-auto px-4 text-center mb-12">
+      <h1 class="text-4xl font-serif tracking-wide mb-4">{year} Timeline</h1>
+      <a
+        href="/"
+        class="text-sm border-b border-transparent hover:border-[var(--color-text)] transition-colors"
+        >Back to Home</a
+      >
+    </div>
+    <div>
+      <img src={events.image} alt={year} />
+    </div>
+  </main>
+  <Footer />
+</Layout>
