@@ -2,6 +2,8 @@
 import FadeIn from "./FadeIn.tsx";
 import { PHOTOS } from "@/mocks/constants";
 const photos = PHOTOS;
+const pathname = Astro.url.pathname;
+const isHomePage = pathname === "/" || pathname === "";
 ---
 
 <section
@@ -11,14 +13,21 @@ const photos = PHOTOS;
     PHOTO LIST
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
+  <div
+    class:list={[
+      "grid grid-cols-1 gap-[7.8vw]",
+      isHomePage ? "md:grid-cols-6" : "md:grid-cols-3",
+    ]}
+  >
     {
       photos.map((photo, index) => (
         <FadeIn
           client:visible
           delay={index * 0.2}
           opacityDuration={0.5}
-          className={`group ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
+          className={`group ${
+            isHomePage ? (index < 2 ? "md:col-span-3" : "md:col-span-2") : ""
+          }`}
         >
           <div class="overflow-hidden mb-4 cursor-pointer">
             <img
@@ -45,7 +54,7 @@ const photos = PHOTOS;
 
   <div class="mt-20 text-center">
     <a
-      href="#"
+      href="/photos"
       class="inline-flex items-center justify-center relative border border-[var(--color-border)] px-6 py-4 w-64 hover:bg-gray-50 transition-colors group"
     >
       <span class="text-sm tracking-widest uppercase">View More</span>
