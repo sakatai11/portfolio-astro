@@ -1,10 +1,14 @@
 ---
-
+const pathname = Astro.url.pathname;
+const isHomePage = pathname === "/" || pathname === "";
 ---
 
 <header
 	id="header"
-	class="py-10 fixed top-0 w-full z-100 bg-white/90 backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-full"
+	class:list={[
+		"py-10 top-0 w-full z-100 bg-white/90 backdrop-blur-md transition-all duration-500",
+		isHomePage ? "fixed opacity-0 -translate-y-full" : "sticky",
+	]}
 >
 	<div
 		class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] flex justify-between items-center"
@@ -58,5 +62,7 @@
 		);
 
 		observer.observe(hero);
+	} else if (header) {
+		header.classList.remove("opacity-0", "-translate-y-full");
 	}
 </script>
