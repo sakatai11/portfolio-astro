@@ -11,26 +11,28 @@ const events = EVENTS;
 
 	<div class="flex flex-col gap-[256px]">
 		{
-			events.map((event, index) => (
-				<FadeIn client:visible opacityDuration={1}>
-					<div
-						class={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${index % 2 === 1 ? "md:flex-row-reverse" : ""}`}
-					>
-						<div class="w-full md:w-1/2">
-							<img
-								src={event.image}
-								alt={event.year}
-								class="w-full aspect-[3/2] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
-							/>
+			events.map((event, index) => {
+				return (
+					<FadeIn client:visible opacityDuration={1}>
+						<div
+							class={`flex flex-col md:flex-row items-center gap-12 md:gap-24 ${index % 2 === 1 ? "md:flex-row-reverse" : ""}`}
+						>
+							<div class="w-full md:w-1/2">
+								<img
+									src={event.image}
+									alt={event.year}
+									class="w-full aspect-[3/2] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+								/>
+							</div>
+							<div class="w-full md:w-1/2 text-center">
+								<span class="text-4xl font-light tracking-widest text-[var(--color-text)]">
+									{event.year}
+								</span>
+							</div>
 						</div>
-						<div class="w-full md:w-1/2 text-center">
-							<span class="text-4xl font-light tracking-widest text-[var(--color-text)]">
-								{event.year}
-							</span>
-						</div>
-					</div>
-				</FadeIn>
-			))
+					</FadeIn>
+				);
+			})
 		}
 	</div>
 </section>

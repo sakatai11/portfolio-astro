@@ -30,21 +30,23 @@ export default function Hero() {
 
       <div className="relative z-10 text-center">
         <h1 className="text-6xl md:text-8xl font-serif tracking-widest text-white font-light flex overflow-hidden">
-          {text.split("").map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{
-                duration: 2,
-                delay: 0.5 + index * 0.15,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="inline-block"
-            >
-              {char}
-            </motion.span>
-          ))}
+          {text.split("").map((char, index) => {
+            return (
+              <motion.span
+                key={index}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  duration: 2,
+                  delay: 0.5 + index * 0.15,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="inline-block"
+              >
+                {char}
+              </motion.span>
+            );
+          })}
         </h1>
       </div>
     </section>
