@@ -1,0 +1,62 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import FadeIn from "../../components/FadeIn.tsx";
+import { PHOTOS } from "@/mocks/constants";
+
+const photos = PHOTOS;
+---
+
+<Layout title="Photos | Taichi Sakai">
+  <Header />
+  <main class="py-12">
+    <div class="container mx-auto px-4 text-center mb-12">
+      <h1 class="text-3xl font-sans tracking-widest uppercase mb-4 text-center">
+        PHOTO LIST
+      </h1>
+      <a
+        href="/"
+        class="text-sm border-b border-transparent hover:border-[var(--color-text)] transition-colors"
+        >Back to Home</a
+      >
+    </div>
+
+    <div class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] pb-[80px]">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
+        {
+          photos.map((photo, index) => {
+            return (
+              <FadeIn
+                client:visible
+                delay={index * 0.2}
+                opacityDuration={0.5}
+                className="group"
+              >
+                <div class="overflow-hidden mb-4 cursor-pointer">
+                  <img
+                    src={photo.src}
+                    alt={photo.title}
+                    class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                  />
+                </div>
+                <ul class="flex gap-2 mb-2">
+                  {photo.label.map((label, index) => (
+                    <li class="inline-block text-xs text-[var(--color-accent)]">
+                      <a href="#">{label}</a>
+                    </li>
+                  ))}
+                </ul>
+                <h3 class="font-medium tracking-wide mb-1">{photo.title}</h3>
+                <p class="text-xs text-[var(--color-accent)] tracking-wider">
+                  {photo.date}
+                </p>
+              </FadeIn>
+            );
+          })
+        }
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

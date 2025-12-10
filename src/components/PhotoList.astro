@@ -2,8 +2,6 @@
 import FadeIn from "./FadeIn.tsx";
 import { PHOTOS } from "@/mocks/constants";
 const photos = PHOTOS;
-const pathname = Astro.url.pathname;
-const isHomePage = pathname === "/" || pathname === "";
 ---
 
 <section
@@ -13,42 +11,39 @@ const isHomePage = pathname === "/" || pathname === "";
     PHOTO LIST
   </h2>
 
-  <div
-    class:list={[
-      "grid grid-cols-1 gap-[7.8vw]",
-      isHomePage ? "md:grid-cols-6" : "md:grid-cols-3",
-    ]}
-  >
+  <div class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
     {
-      photos.map((photo, index) => (
-        <FadeIn
-          client:visible
-          delay={index * 0.2}
-          opacityDuration={0.5}
-          className={`group ${
-            isHomePage ? (index < 2 ? "md:col-span-3" : "md:col-span-2") : ""
-          }`}
-        >
-          <div class="overflow-hidden mb-4 cursor-pointer">
-            <img
-              src={photo.src}
-              alt={photo.title}
-              class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
-            />
-          </div>
-          <ul class="flex gap-2 mb-2">
-            {photo.label.map((label, index) => (
-              <li class="inline-block text-xs text-[var(--color-accent)]">
-                <a href="#">{label}</a>
-              </li>
-            ))}
-          </ul>
-          <h3 class="font-medium tracking-wide mb-1">{photo.title}</h3>
-          <p class="text-xs text-[var(--color-accent)] tracking-wider">
-            {photo.date}
-          </p>
-        </FadeIn>
-      ))
+      photos.map((photo, index) => {
+        return (
+          <FadeIn
+            client:visible
+            delay={index * 0.2}
+            opacityDuration={0.5}
+            className={`group ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
+          >
+            <div class="overflow-hidden mb-4 cursor-pointer">
+              <img
+                src={photo.src}
+                alt={photo.title}
+                class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+              />
+            </div>
+            <ul class="flex gap-2 mb-2">
+              {photo.label.map((label, index) => {
+                return (
+                  <li class="inline-block text-xs text-[var(--color-accent)]">
+                    <a href="#">{label}</a>
+                  </li>
+                );
+              })}
+            </ul>
+            <h3 class="font-medium tracking-wide mb-1">{photo.title}</h3>
+            <p class="text-xs text-[var(--color-accent)] tracking-wider">
+              {photo.date}
+            </p>
+          </FadeIn>
+        );
+      })
     }
   </div>
 
