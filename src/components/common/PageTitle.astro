@@ -1,0 +1,21 @@
+---
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<div class="text-center mb-12">
+  <h1
+    class="mb-4 text-center
+      sans text-3xl font-sans tracking-widest uppercase"
+  >
+    {title}
+  </h1>
+  <a
+    href="/"
+    class="text-sm border-b border-transparent hover:border-[var(--color-text)] transition-colors"
+    >Back to Home</a
+  >
+</div>

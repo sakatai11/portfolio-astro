@@ -2,13 +2,15 @@
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/common/Header.astro";
 import Footer from "@/components/common/Footer.astro";
+import Container from "@/components/common/Container.astro";
+import PageTitle from "@/components/common/PageTitle.astro";
 import { EVENTS } from "@/mocks/constants";
 
 export async function getStaticPaths() {
-  // 1️⃣ Extract unique years from EVENTS
+  // EVENTSから重複しない年を抽出する。
   const uniqueYears = [...new Set(EVENTS.map((event) => event.year))];
 
-  // 2️⃣ Build static paths for each year
+  // 各年の静的パスを構築する。
   return uniqueYears.map((year) => {
     const eventsForYear = EVENTS.filter((event) => event.year === year);
     return {
@@ -27,17 +29,10 @@ const { year, events } = Astro.props;
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
   <main class="py-12">
-    <div class="container mx-auto px-4 text-center mb-12">
-      <h1 class="text-4xl font-serif tracking-wide mb-4">{year} Timeline</h1>
-      <a
-        href="/"
-        class="text-sm border-b border-transparent hover:border-[var(--color-text)] transition-colors"
-        >Back to Home</a
-      >
-    </div>
-    <div>
+    <PageTitle title={`${year} Timeline`} />
+    <Container>
       <img src={events.image} alt={year} />
-    </div>
+    </Container>
   </main>
   <Footer />
 </Layout>
