@@ -1,5 +1,4 @@
 ---
-import FadeIn from "@/components/ui/FadeIn.tsx";
 import { PHOTOS } from "@/mocks/constants";
 
 const photos = PHOTOS;
@@ -9,19 +8,17 @@ const photos = PHOTOS;
   {
     photos.map((photo, index) => {
       return (
-        <FadeIn
-          client:visible
-          delay={index * 0.2}
-          opacityDuration={0.5}
-          className="group"
-        >
-          <div class="overflow-hidden mb-4 cursor-pointer">
+        <div class="group">
+          <a
+            href={`/photos/${photo.id}`}
+            class="block overflow-hidden mb-4 cursor-pointer"
+          >
             <img
               src={photo.src}
               alt={photo.title}
               class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
             />
-          </div>
+          </a>
           <ul class="flex gap-2 mb-2">
             {photo.label.map((label, index) => (
               <li class="inline-block text-xs text-[var(--color-accent)]">
@@ -33,7 +30,7 @@ const photos = PHOTOS;
           <p class="text-xs text-[var(--color-accent)] tracking-wider">
             {photo.date}
           </p>
-        </FadeIn>
+        </div>
       );
     })
   }

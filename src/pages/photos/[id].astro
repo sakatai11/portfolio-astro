@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { PHOTOS } from "@/mocks/constants";
+
+export function getStaticPaths() {
+  return PHOTOS.map((photo) => ({
+    params: { id: photo.id.toString() },
+    props: { photo },
+  }));
+}
+
+const { photo } = Astro.props;
+---
+
+<Layout title={photo.title}>
+  <div class="h-screen w-full flex items-center justify-center bg-black">
+    <a
+      href="/photos"
+      class="absolute top-8 left-8 text-white z-10 transition-opacity hover:opacity-70"
+    >
+      ← Back to Photos
+    </a>
+    <img
+      src={photo.src}
+      alt={photo.title}
+      transition:name={`photo-${photo.id}`}
+      class="max-h-screen max-w-full object-contain"
+    />
+  </div>
+</Layout>
