@@ -25,9 +25,12 @@ const events = EVENTS;
 								/>
 							</div>
 							<div class="w-full md:w-1/2 text-center">
-								<span class="text-4xl font-light tracking-widest text-[var(--color-text)]">
+								<a
+									href={event.year}
+									class="text-4xl font-light tracking-widest text-[var(--color-text)] hover:opacity-70 transition-opacity"
+								>
 									{event.year}
-								</span>
+								</a>
 							</div>
 						</div>
 					</FadeIn>
