@@ -19,17 +19,6 @@ const photos = PHOTOS;
               class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
             />
           </a>
-          <ul class="flex gap-2 mb-2">
-            {photo.label.map((label, index) => (
-              <li class="inline-block text-xs text-[var(--color-accent)]">
-                <a href="#">{label}</a>
-              </li>
-            ))}
-          </ul>
-          <h3 class="font-medium tracking-wide mb-1">{photo.title}</h3>
-          <p class="text-xs text-[var(--color-accent)] tracking-wider">
-            {photo.date}
-          </p>
         </div>
       );
     })
