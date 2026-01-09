@@ -5,7 +5,7 @@ import Footer from "@/components/common/Footer.astro";
 import Container from "@/components/common/Container.astro";
 import PageTitle from "@/components/common/PageTitle.astro";
 import { EVENTS } from "@/mocks/constants";
-import { fade } from "astro:transitions";
+import { customFade } from "@/utils/animation";
 
 export async function getStaticPaths() {
   // EVENTSから重複しない年を抽出する。
@@ -29,7 +29,10 @@ const { year, events } = Astro.props;
 
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
-  <main class="py-12" transition:animate={fade({ duration: "0.8s" })}>
+  <main
+    class="py-12"
+    transition:animate={customFade({ duration: "0.8s", initialOpacity: 0.2 })}
+  >
     <PageTitle title={`${year} Timeline`} />
     <Container>
       <img src={events.image} alt={year} />

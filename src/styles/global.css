@@ -51,3 +51,23 @@
     color: var(--color-accent);
   }
 }
+
+@keyframes customFadeIn {
+  from {
+    opacity: var(--fade-from, 0);
+  }
+
+  to {
+    opacity: var(--fade-to, 1);
+  }
+}
+
+@keyframes customFadeOut {
+  from {
+    opacity: var(--fade-to, 1);
+  }
+
+  to {
+    opacity: var(--fade-from, 0);
+  }
+}
