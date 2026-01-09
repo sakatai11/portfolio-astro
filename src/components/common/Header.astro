@@ -39,30 +39,32 @@ const isHomePage = pathname === "/" || pathname === "";
 </header>
 
 <script>
-	const header = document.getElementById("header");
-	const hero = document.getElementById("hero");
+	document.addEventListener("astro:page-load", () => {
+		const header = document.getElementById("header");
+		const hero = document.getElementById("hero");
 
-	if (header && hero) {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (!entry.isIntersecting) {
-						// Hero is out of view (scrolled past)
-						header.classList.remove("opacity-0", "-translate-y-full");
-					} else {
-						// Hero is in view
-						header.classList.add("opacity-0", "-translate-y-full");
-					}
-				});
-			},
-			{
-				root: null,
-				threshold: 0,
-			},
-		);
+		if (header && hero) {
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) {
+							// Hero is out of view (scrolled past)
+							header.classList.remove("opacity-0", "-translate-y-full");
+						} else {
+							// Hero is in view
+							header.classList.add("opacity-0", "-translate-y-full");
+						}
+					});
+				},
+				{
+					root: null,
+					threshold: 0,
+				},
+			);
 
-		observer.observe(hero);
-	} else if (header) {
-		header.classList.remove("opacity-0", "-translate-y-full");
-	}
+			observer.observe(hero);
+		} else if (header) {
+			header.classList.remove("opacity-0", "-translate-y-full");
+		}
+	});
 </script>
