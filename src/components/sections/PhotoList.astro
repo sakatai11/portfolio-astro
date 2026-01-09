@@ -4,9 +4,7 @@ import { PHOTOS } from "@/mocks/constants";
 const photos = PHOTOS;
 ---
 
-<section
-  class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] pt-[160px] pb-[80px]"
->
+<section class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] pt-[160px] pb-0">
   <h2 class="text-3xl font-sans tracking-widest uppercase mb-32 text-center">
     PHOTO LIST
   </h2>
@@ -21,7 +19,7 @@ const photos = PHOTOS;
             opacityDuration={0.5}
             className={`group ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
           >
-            <div class="overflow-hidden mb-4 cursor-pointer">
+            <div class="overflow-hidden cursor-pointer">
               <img
                 src={photo.src}
                 alt={photo.title}

@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/common/Header.astro";
 import Footer from "@/components/common/Footer.astro";
-import Container from "@/components/common/Container.astro";
+import GridContainer from "@/components/common/GridContainer.astro";
 import PageTitle from "@/components/common/PageTitle.astro";
 import { EVENTS } from "@/mocks/constants";
 import { fade } from "astro:transitions";
@@ -31,9 +31,9 @@ const { year, events } = Astro.props;
   <Header />
   <main class="py-12" transition:animate={fade({ duration: "0.8s" })}>
     <PageTitle title={`${year} Timeline`} />
-    <Container>
+    <GridContainer>
       <img src={events.image} alt={year} />
-    </Container>
+    </GridContainer>
   </main>
   <Footer />
 </Layout>
