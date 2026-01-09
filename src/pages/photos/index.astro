@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/common/Header.astro";
-import { customFade } from "@/utils/animation";
+import { fade } from "astro:transitions";
 import Footer from "@/components/common/Footer.astro";
 import PageTitle from "@/components/common/PageTitle.astro";
 import Grid from "@/components/sections/photos/Grid.astro";
@@ -10,10 +10,7 @@ import Container from "@/components/common/Container.astro";
 
 <Layout title="Photos | Taichi Sakai">
   <Header />
-  <main
-    class="py-12"
-    transition:animate={customFade({ duration: "0.8s", initialOpacity: 0.2 })}
-  >
+  <main class="py-12" transition:animate={fade({ duration: "0.8s" })}>
     <PageTitle title="PHOTO LIST" />
     <Container>
       <Grid />
