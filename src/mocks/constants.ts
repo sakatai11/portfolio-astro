@@ -1,4 +1,15 @@
 export const CONTENTS = [
+  { id: 1, src: "https://picsum.photos/seed/content1/600/600" },
+  { id: 2, src: "https://picsum.photos/seed/content2/600/600" },
+  { id: 3, src: "https://picsum.photos/seed/content3/600/600" },
+  { id: 4, src: "https://picsum.photos/seed/content4/600/600" },
+  { id: 5, src: "https://picsum.photos/seed/content5/600/600" },
+  { id: 6, src: "https://picsum.photos/seed/content6/600/600" },
+  { id: 7, src: "https://picsum.photos/seed/content7/600/600" },
+  { id: 8, src: "https://picsum.photos/seed/content8/600/600" },
+];
+
+export const DETAILED_CONTENTS = [
   {
     id: "content-001",
     createdAt: "2024-10-15T09:30:00.000Z",
