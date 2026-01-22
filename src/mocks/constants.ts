@@ -16,7 +16,6 @@ export const DETAILED_CONTENTS = [
     updatedAt: "2024-10-15T09:30:00.000Z",
     publishedAt: "2024-10-15T10:00:00.000Z",
     revisedAt: "2024-10-15T10:00:00.000Z",
-    date: "2024.10.15",
     label: ["旅行", "風景"],
     title: "秋の京都散策",
     image: {
@@ -55,7 +54,6 @@ export const DETAILED_CONTENTS = [
     updatedAt: "2024-11-20T14:20:00.000Z",
     publishedAt: "2024-11-20T15:00:00.000Z",
     revisedAt: "2024-11-20T15:00:00.000Z",
-    date: "2024.11.20",
     label: ["スポーツ", "イベント"],
     title: "マラソン大会の記録",
     image: {
@@ -94,7 +92,6 @@ export const DETAILED_CONTENTS = [
     updatedAt: "2024-12-05T11:45:00.000Z",
     publishedAt: "2024-12-05T12:00:00.000Z",
     revisedAt: "2024-12-05T12:00:00.000Z",
-    date: "2024.12.05",
     label: ["雑記", "日常"],
     title: "冬の街並み",
     image: {
@@ -133,7 +130,6 @@ export const DETAILED_CONTENTS = [
     updatedAt: "2025-01-10T08:15:00.000Z",
     publishedAt: "2025-01-10T09:00:00.000Z",
     revisedAt: "2025-01-10T09:00:00.000Z",
-    date: "2025.01.10",
     label: ["旅行", "自然"],
     title: "新春の富士山",
     image: {
@@ -172,7 +168,6 @@ export const DETAILED_CONTENTS = [
     updatedAt: "2025-01-18T16:30:00.000Z",
     publishedAt: "2025-01-18T17:00:00.000Z",
     revisedAt: "2025-01-18T17:00:00.000Z",
-    date: "2025.01.18",
     label: ["イベント", "雑記"],
     title: "冬のイルミネーション",
     image: {
