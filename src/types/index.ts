@@ -6,7 +6,18 @@ export type PhotosMain = {
   id: string;
   main: PhotoInfo;
   title: string;
-} & MicroCMSDate
+} & MicroCMSDate;
+
+export type PhotoDetail = {
+  id: string;
+  label: string[];
+  title: string;
+  main: PhotoInfo;
+  sub?: PhotoInfo;
+  camera: string[];
+  file: string[];
+  image_list: PhotoInfo[];
+} & MicroCMSDate;
 
 type PhotoInfo = {
   url: string;

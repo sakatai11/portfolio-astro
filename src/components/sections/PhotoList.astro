@@ -16,21 +16,23 @@ const { photos } = Astro.props;
 
   <div class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
     {
-      photos.map((photo, index) => {
+      photos.map(({ id, main, title }, index) => {
         return (
           <FadeIn
             client:visible
             delay={index * 0.2}
             opacityDuration={0.5}
-            className={`group ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
+            className={`${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
           >
-            <div class="overflow-hidden cursor-pointer">
+            <a href={`/photos/${id}`} class="group block overflow-hidden">
               <img
-                src={photo.main.url}
-                alt={photo.title}
+                src={main.url}
+                alt={title}
+                width={main.width}
+                height={main.height}
                 class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
               />
-            </div>
+            </a>
           </FadeIn>
         );
       })

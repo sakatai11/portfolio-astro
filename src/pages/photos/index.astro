@@ -6,6 +6,14 @@ import Footer from "@/components/common/Footer.astro";
 import PageTitle from "@/components/common/PageTitle.astro";
 import Grid from "@/components/sections/photos/Grid.astro";
 import GridContainer from "@/components/common/GridContainer.astro";
+
+import { getMicroCmsList } from "@/libs/microcms";
+import type { PhotosMain } from "@/types/index"
+
+const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
+  endpoint: 'photos',
+  queries: { fields: ['id', 'main'] },
+});
 ---
 
 <Layout title="Photos | Taichi Sakai">
@@ -13,7 +21,7 @@ import GridContainer from "@/components/common/GridContainer.astro";
   <main class="py-12" transition:animate={fade({ duration: "0.8s" })}>
     <PageTitle title="PHOTOS" />
     <GridContainer>
-      <Grid />
+      <Grid photos={photos} />
     </GridContainer>
   </main>
   <Footer />

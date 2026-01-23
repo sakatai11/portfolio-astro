@@ -13,3 +13,16 @@ export const getMicroCmsList = async <T>({
   const response = await microCMSClient.getList<T>({ endpoint, queries });
   return response.contents;
 };
+
+export const getMicroCmsDetail = async <T>({
+  endpoint,
+  contentId,
+  queries,
+}: MicroCmsRequest & { contentId: string }) => {
+  const response = await microCMSClient.get<T>({
+    endpoint,
+    contentId,
+    queries,
+  });
+  return response;
+};

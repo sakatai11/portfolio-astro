@@ -12,10 +12,9 @@ import type { PhotosMain } from "@/types/index"
 
 const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
   endpoint: 'photos',
-  queries: { fields: ['id', 'main'] },
+  queries: { fields: ['id', 'main', 'title'] },
 });
 
-console.log(photos)
 ---
 
 <Layout title="Taichi Sakai | Photography Portfolio">

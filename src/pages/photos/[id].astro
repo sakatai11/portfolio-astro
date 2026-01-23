@@ -1,30 +1,29 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { PHOTOS } from "@/mocks/constants";
+import Detail from "@/components/sections/photos/Detail.astro";
+import { getMicroCmsList, getMicroCmsDetail } from "@/libs/microcms";
+import type { PhotosMain, PhotoDetail } from "@/types/index";
 
-export function getStaticPaths() {
-  return PHOTOS.map((photo) => ({
-    params: { id: photo.id.toString() },
-    props: { photo },
+export async function getStaticPaths() {
+  const photos = await getMicroCmsList<PhotosMain>({
+    endpoint: 'photos',
+    queries: { fields: ['id'] },
+  });
+
+  return photos.map((photo) => ({
+    params: { id: photo.id },
   }));
 }
 
-const { photo } = Astro.props;
+const { id } = Astro.params;
+
+const photoDetail: PhotoDetail = await getMicroCmsDetail<PhotoDetail>({
+  endpoint: 'photos',
+  contentId: id!,
+});
+
 ---
 
-<Layout title={photo.title}>
-  <div class="h-screen w-full flex items-center justify-center bg-white">
-    <a
-      href="/photos"
-      class="absolute top-8 left-8 text-black z-10 transition-opacity hover:opacity-70"
-    >
-      ← Back to Photos
-    </a>
-    <img
-      src={photo.src}
-      alt={photo.title}
-      transition:name={`photo-${photo.id}`}
-      class="max-h-screen max-w-full object-contain"
-    />
-  </div>
+<Layout title={photoDetail.title}>
+  <Detail photoDetail={photoDetail} />
 </Layout>

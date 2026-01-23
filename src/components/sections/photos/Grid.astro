@@ -1,25 +1,30 @@
 ---
-import { PHOTOS } from "@/mocks/constants";
+import type { PhotosMain } from "@/types/index";
 
-const photos = PHOTOS;
+
+type Props = {
+  photos: PhotosMain[];
+}
+
+const { photos } = Astro.props;
 ---
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
   {
-    photos.map((photo, index) => {
+    photos.map(({id , main, title}, index) => {
       return (
-        <div class="group">
           <a
-            href={`/photos/${photo.id}`}
-            class="block overflow-hidden mb-4 cursor-pointer"
+            href={`/photos/${id}`}
+            class="block overflow-hidden group cursor-pointer"
           >
             <img
-              src={photo.src}
-              alt={photo.title}
+              src={main.url}
+              alt={title}
+              width={main.width}
+              height={main.height}
               class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
             />
           </a>
-        </div>
       );
     })
   }
