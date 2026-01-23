@@ -2,7 +2,7 @@ import type { MicroCMSQueries, MicroCMSDate } from "microcms-js-sdk";
 
 export type MicroCmsRequest = { endpoint: string; queries?: MicroCMSQueries };
 
-export type Photos = {
+export type PhotosMain = {
   id: string;
   main: PhotoInfo;
   title: string;

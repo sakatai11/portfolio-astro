@@ -8,9 +8,9 @@ import Contents from "@/components/sections/Contents.astro";
 import Footer from "@/components/common/Footer.astro";
 
 import { getMicroCmsList } from "@/libs/microcms";
-import type { Photos } from "@/types/index"
+import type { PhotosMain } from "@/types/index"
 
-const photos: Photos[] = await getMicroCmsList<Photos>({
+const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
   endpoint: 'photos',
   queries: { fields: ['id', 'main'] },
 });
