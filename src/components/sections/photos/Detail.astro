@@ -13,7 +13,7 @@ const { photoDetail } = Astro.props;
 <div class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
   <h2>{photoDetail.title}</h2>
   <p>{photoDetail.camera?.[0]}</p>
-  <p>{photoDetail.file?.[0]}</p>
+  <p>{photoDetail.film?.[0]}</p>
   {
   photoDetail.image_list.map(({url, width, height}, index) => {
       return (

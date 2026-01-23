@@ -15,7 +15,7 @@ export type PhotoDetail = {
   main: PhotoInfo;
   sub?: PhotoInfo;
   camera: string[];
-  file: string[];
+  film: string[];
   image_list: PhotoInfo[];
 } & MicroCMSDate;
 
