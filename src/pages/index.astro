@@ -6,13 +6,23 @@ import PhotoList from "@/components/sections/PhotoList.astro";
 import Timeline from "@/components/sections/Timeline.astro";
 import Contents from "@/components/sections/Contents.astro";
 import Footer from "@/components/common/Footer.astro";
+
+import { getMicroCmsList } from "@/libs/microcms";
+import type { Photos } from "@/types/index"
+
+const photos: Photos[] = await getMicroCmsList<Photos>({
+  endpoint: 'photos',
+  queries: { fields: ['id', 'main'] },
+});
+
+console.log(photos)
 ---
 
 <Layout title="Taichi Sakai | Photography Portfolio">
 	<Header />
 	<main>
 		<Hero client:load />
-		<PhotoList />
+		<PhotoList photos={photos} />
 		<Timeline />
 		<Contents />
 	</main>
