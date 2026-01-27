@@ -49,6 +49,8 @@ src/
 │   ├── about.astro    # Aboutページ
 │   ├── [year].astro   # 年別動的ルート
 │   └── photos/        # 写真詳細ページ群
+├── services/          # 外部サービス連携 (MicroCMS等)
+├── types/             # TypeScript型定義
 ├── mocks/             # モックデータ (constants.ts)
 └── styles/            # グローバルスタイル
 ```
@@ -60,6 +62,7 @@ src/
 ```typescript
 import Layout from "@/layouts/Layout.astro";
 import { PHOTOS } from "@/mocks/constants.ts";
+import { getMicroCmsList } from "@/services/microcms";
 ```
 
 ### ページルーティング

@@ -7,7 +7,7 @@ import PageTitle from "@/components/common/PageTitle.astro";
 import Grid from "@/components/sections/photos/Grid.astro";
 import GridContainer from "@/components/common/GridContainer.astro";
 
-import { getMicroCmsList } from "@/libs/microcms";
+import { getMicroCmsList } from "@/services/microcms";
 import type { PhotosMain } from "@/types/index"
 
 const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({

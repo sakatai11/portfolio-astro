@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Detail from "@/components/sections/photos/Detail.astro";
-import { getMicroCmsList, getMicroCmsDetail } from "@/libs/microcms";
+import { getMicroCmsList, getMicroCmsDetail } from "@/services/microcms";
 import type { PhotosMain, PhotoDetail } from "@/types/index";
 
 export async function getStaticPaths() {
