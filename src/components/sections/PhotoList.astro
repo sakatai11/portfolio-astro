@@ -4,7 +4,7 @@ import type { PhotosMain } from "@/types/index";
 
 type Props = {
   photos: PhotosMain[];
-}
+};
 
 const { photos } = Astro.props;
 ---
@@ -14,30 +14,27 @@ const { photos } = Astro.props;
     PHOTOS
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
+  <ul class="grid grid-cols-1 md:grid-cols-6 gap-[7.8vw]">
     {
       photos.map(({ id, main, title }, index) => {
         return (
-          <FadeIn
-            client:visible
-            delay={index * 0.2}
-            opacityDuration={0.5}
-            className={`${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}
-          >
-            <a href={`/photos/${id}`} class="group block overflow-hidden">
-              <img
-                src={main.url}
-                alt={title}
-                width={main.width}
-                height={main.height}
-                class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
-              />
-            </a>
-          </FadeIn>
+          <li class={`w-full ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}>
+            <FadeIn client:visible delay={index * 0.2} opacityDuration={0.5}>
+              <a href={`/photos/${id}`} class="group block overflow-hidden">
+                <img
+                  src={main.url}
+                  alt={title}
+                  width={main.width}
+                  height={main.height}
+                  class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                />
+              </a>
+            </FadeIn>
+          </li>
         );
       })
     }
-  </div>
+  </ul>
 
   <div class="mt-20 text-center">
     <a

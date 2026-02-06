@@ -3,23 +3,25 @@ import type { PhotoDetail } from "@/types/index";
 
 type Props = {
   photoDetail: PhotoDetail;
-}
+};
 
 const { photoDetail } = Astro.props;
-
 ---
 
-  
-<div class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
-  <h2>{photoDetail.title}</h2>
-  <p>{photoDetail.camera?.[0]}</p>
-  <p>{photoDetail.film?.[0]}</p>
+<h2
+  class="mb-12 text-center
+      sans text-3xl font-sans tracking-widest uppercase"
+>
+  {photoDetail.title}
+</h2>
+<p class="text-center pb-1">{photoDetail.camera?.[0]}</p>
+<p class="text-center">{photoDetail.film?.[0]}</p>
+<ul class="grid grid-cols-1 md:grid-cols-3">
   {
-  photoDetail.image_list.map(({url, width, height}, index) => {
+    photoDetail.image_list.map(({ url, width, height }, index) => {
       return (
-          <div
-            class="block overflow-hidden group cursor-pointer"
-          >
+        <li class="p-[4.2vw]">
+          <div class="w-full h-full flex items-center justify-center overflow-hidden group cursor-pointer">
             <img
               src={url}
               alt={`image${index + 1}`}
@@ -28,7 +30,8 @@ const { photoDetail } = Astro.props;
               class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
             />
           </div>
+        </li>
       );
     })
   }
-</div>
+</ul>

@@ -3,11 +3,14 @@ import Layout from "@/layouts/Layout.astro";
 import Detail from "@/components/sections/photos/Detail.astro";
 import { getMicroCmsList, getMicroCmsDetail } from "@/services/microcms";
 import type { PhotosMain, PhotoDetail } from "@/types/index";
+import { fade } from "astro:transitions";
+import Header from "@/components/common/Header.astro";
+import Footer from "@/components/common/Footer.astro";
 
 export async function getStaticPaths() {
   const photos = await getMicroCmsList<PhotosMain>({
-    endpoint: 'photos',
-    queries: { fields: ['id'] },
+    endpoint: "photos",
+    queries: { fields: ["id"] },
   });
 
   return photos.map((photo) => ({
@@ -18,12 +21,15 @@ export async function getStaticPaths() {
 const { id } = Astro.params;
 
 const photoDetail: PhotoDetail = await getMicroCmsDetail<PhotoDetail>({
-  endpoint: 'photos',
+  endpoint: "photos",
   contentId: id!,
 });
-
 ---
 
 <Layout title={photoDetail.title}>
-  <Detail photoDetail={photoDetail} />
+  <Header />
+  <main class="py-12 w-full" transition:animate={fade({ duration: "0.8s" })}>
+    <Detail photoDetail={photoDetail} />
+  </main>
+  <Footer />
 </Layout>

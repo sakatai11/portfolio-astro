@@ -1,18 +1,18 @@
 ---
 import type { PhotosMain } from "@/types/index";
 
-
 type Props = {
   photos: PhotosMain[];
-}
+};
 
 const { photos } = Astro.props;
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
+<ul class="grid grid-cols-1 md:grid-cols-3 gap-[7.8vw]">
   {
-    photos.map(({id , main, title}, index) => {
+    photos.map(({ id, main, title }, index) => {
       return (
+        <li>
           <a
             href={`/photos/${id}`}
             class="block overflow-hidden group cursor-pointer"
@@ -25,7 +25,8 @@ const { photos } = Astro.props;
               class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
             />
           </a>
+        </li>
       );
     })
   }
-</div>
+</ul>
