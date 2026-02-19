@@ -19,7 +19,7 @@ const { photos } = Astro.props;
       photos.map(({ id, main, title }, index) => {
         return (
           <li class={`w-full ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}>
-            <FadeIn client:visible delay={index * 0.2} opacityDuration={0.5}>
+            <FadeIn client:idle delay={index * 0.2} opacityDuration={0.5}>
               <a href={`/photos/${id}`} class="group block overflow-hidden">
                 <img
                   src={main.url}

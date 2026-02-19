@@ -14,7 +14,7 @@ const contents = CONTENTS;
 			contents.map((content, index) => {
 				return (
 					<li class="w-full">
-						<FadeIn client:visible delay={index * 0.2} opacityDuration={0.5}>
+						<FadeIn client:idle delay={index * 0.2} opacityDuration={0.5}>
 							<div class="aspect-square overflow-hidden cursor-pointer group">
 								<img
 									src={content.src}
