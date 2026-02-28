@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { PhotoGalleryProps } from '@/types/index'
 import { isPortrait32 } from '@/utils'
-import PhotoModal from './PhotoModal'
+import Modal from './Modal'
 
 export default function PhotoGallery({ images }: PhotoGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
@@ -65,7 +65,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
       </ul>
 
       {selectedIndex !== null && (
-        <PhotoModal
+        <Modal
           images={images}
           currentIndex={selectedIndex}
           onClose={handleClose}
