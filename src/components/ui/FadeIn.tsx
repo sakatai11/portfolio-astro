@@ -1,14 +1,14 @@
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { motion } from 'framer-motion'
+import type { ReactNode } from 'react'
 
 type FadeInProps = {
-  children: ReactNode;
-  delay?: number;
-  duration?: number;
-  opacityDuration?: number;
-  viewportMargin?: string;
-  y?: number;
-  className?: string;
+  children: ReactNode
+  delay?: number
+  duration?: number
+  opacityDuration?: number
+  viewportMargin?: string
+  y?: number
+  className?: string
 }
 
 export default function FadeIn({
@@ -17,8 +17,8 @@ export default function FadeIn({
   duration = 2.0,
   opacityDuration,
   y = 0,
-  viewportMargin = "-300px",
-  className = "",
+  viewportMargin = '-300px',
+  className = '',
 }: FadeInProps & { opacityDuration?: number; viewportMargin?: string }) {
   return (
     <motion.div
@@ -26,12 +26,16 @@ export default function FadeIn({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: viewportMargin }}
       transition={{
-        y: { duration, delay, ease: "easeOut" },
-        opacity: { duration: opacityDuration ?? duration, delay, ease: "easeOut" },
+        y: { duration, delay, ease: 'easeOut' },
+        opacity: {
+          duration: opacityDuration ?? duration,
+          delay,
+          ease: 'easeOut',
+        },
       }}
       className={className}
     >
       {children}
     </motion.div>
-  );
+  )
 }

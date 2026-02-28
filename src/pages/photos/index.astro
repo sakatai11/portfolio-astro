@@ -1,24 +1,24 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/common/Header.astro";
-import { fade } from "astro:transitions";
-import Footer from "@/components/common/Footer.astro";
-import PageTitle from "@/components/common/PageTitle.astro";
-import Grid from "@/components/sections/photos/Grid.astro";
-import GridContainer from "@/components/common/GridContainer.astro";
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/components/common/Header.astro'
+import { fade } from 'astro:transitions'
+import Footer from '@/components/common/Footer.astro'
+import PageTitle from '@/components/common/PageTitle.astro'
+import Grid from '@/components/sections/photos/Grid.astro'
+import GridContainer from '@/components/common/GridContainer.astro'
 
-import { getMicroCmsList } from "@/services/microcms";
-import type { PhotosMain } from "@/types/index";
+import { getMicroCmsList } from '@/services/microcms'
+import type { PhotosMain } from '@/types/index'
 
 const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
-  endpoint: "photos",
-  queries: { fields: ["id", "main"] },
-});
+  endpoint: 'photos',
+  queries: { fields: ['id', 'main'] },
+})
 ---
 
 <Layout title="Photos | Taichi Sakai">
   <Header />
-  <main class="py-12 w-full" transition:animate={fade({ duration: "0.8s" })}>
+  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
     <PageTitle title="PHOTOS" />
     <GridContainer>
       <Grid photos={photos} />

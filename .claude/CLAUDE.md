@@ -60,9 +60,9 @@ src/
 `@/*` エイリアスが `src/*` にマッピングされている (tsconfig.json)
 
 ```typescript
-import Layout from "@/layouts/Layout.astro";
-import { PHOTOS } from "@/mocks/constants.ts";
-import { getMicroCmsList } from "@/services/microcms";
+import Layout from '@/layouts/Layout.astro'
+import { PHOTOS } from '@/mocks/constants.ts'
+import { getMicroCmsList } from '@/services/microcms'
 ```
 
 ### ページルーティング

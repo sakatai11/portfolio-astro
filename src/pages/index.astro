@@ -1,29 +1,28 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/common/Header.astro";
-import Hero from "@/components/sections/Hero.tsx";
-import PhotoList from "@/components/sections/PhotoList.astro";
-import Timeline from "@/components/sections/Timeline.astro";
-import Contents from "@/components/sections/Contents.astro";
-import Footer from "@/components/common/Footer.astro";
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/components/common/Header.astro'
+import Hero from '@/components/sections/Hero.tsx'
+import PhotoList from '@/components/sections/PhotoList.astro'
+import Timeline from '@/components/sections/Timeline.astro'
+import Contents from '@/components/sections/Contents.astro'
+import Footer from '@/components/common/Footer.astro'
 
-import { getMicroCmsList } from "@/services/microcms";
-import type { PhotosMain } from "@/types/index"
+import { getMicroCmsList } from '@/services/microcms'
+import type { PhotosMain } from '@/types/index'
 
 const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
   endpoint: 'photos',
   queries: { fields: ['id', 'main', 'title'] },
-});
-
+})
 ---
 
 <Layout title="Taichi Sakai | Photography Portfolio">
-	<Header />
-	<main>
-		<Hero client:load />
-		<PhotoList photos={photos} />
-		<Timeline />
-		<Contents />
-	</main>
-	<Footer />
+  <Header />
+  <main>
+    <Hero client:load />
+    <PhotoList photos={photos} />
+    <Timeline />
+    <Contents />
+  </main>
+  <Footer />
 </Layout>

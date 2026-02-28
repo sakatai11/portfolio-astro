@@ -1,70 +1,70 @@
 ---
-const pathname = Astro.url.pathname;
-const isHomePage = pathname === "/" || pathname === "";
+const pathname = Astro.url.pathname
+const isHomePage = pathname === '/' || pathname === ''
 ---
 
 <header
-	id="header"
-	class:list={[
-		"py-6 top-0 w-full z-100 bg-white/90 backdrop-blur-md transition-all duration-500",
-		isHomePage ? "fixed opacity-0 -translate-y-full" : "sticky",
-	]}
+  id="header"
+  class:list={[
+    'top-0 z-100 w-full bg-white/90 py-6 backdrop-blur-md transition-all duration-500',
+    isHomePage ? 'fixed -translate-y-full opacity-0' : 'sticky',
+  ]}
 >
-	<div
-		class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] flex justify-between items-center"
-	>
-		<a
-			href="/"
-			class="font-serif text-2xl tracking-widest font-medium hover:text-black transition-colors"
-			>TAICHI SAKAI</a
-		>
-		<nav class="flex gap-10">
-			<a
-				href="/"
-				class="text-xs md:text-sm uppercase tracking-[0.2em] text-[var(--color-accent)] hover:text-black transition-colors relative inline-block after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[1px] after:bg-black after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
-				>Work</a
-			>
-			<a
-				href="/about"
-				class="text-xs md:text-sm uppercase tracking-[0.2em] text-[var(--color-accent)] hover:text-black transition-colors relative inline-block after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[1px] after:bg-black after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
-				>About</a
-			>
-			<a
-				href="mailto:hello@example.com"
-				class="text-xs md:text-sm uppercase tracking-[0.2em] text-[var(--color-accent)] hover:text-black transition-colors relative inline-block after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[1px] after:bg-black after:scale-x-0 after:origin-left after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
-				>Contact</a
-			>
-		</nav>
-	</div>
+  <div
+    class="mx-auto flex max-w-[1600px] items-center justify-between px-4 md:px-[5.5rem]"
+  >
+    <a
+      href="/"
+      class="font-serif text-2xl font-medium tracking-widest transition-colors hover:text-black"
+      >TAICHI SAKAI</a
+    >
+    <nav class="flex gap-10">
+      <a
+        href="/"
+        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
+        >Work</a
+      >
+      <a
+        href="/about"
+        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
+        >About</a
+      >
+      <a
+        href="mailto:hello@example.com"
+        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
+        >Contact</a
+      >
+    </nav>
+  </div>
 </header>
 
 <script>
-	document.addEventListener("astro:page-load", () => {
-		const header = document.getElementById("header");
-		const hero = document.getElementById("hero");
+  document.addEventListener('astro:page-load', () => {
+    const header = document.getElementById('header')
+    const hero = document.getElementById('hero')
 
-		if (header && hero) {
-			const observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (!entry.isIntersecting) {
-							// Hero is out of view (scrolled past)
-							header.classList.remove("opacity-0", "-translate-y-full");
-						} else {
-							// Hero is in view
-							header.classList.add("opacity-0", "-translate-y-full");
-						}
-					});
-				},
-				{
-					root: null,
-					threshold: 0,
-				},
-			);
+    if (header && hero) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              // Hero is out of view (scrolled past)
+              header.classList.remove('opacity-0', '-translate-y-full')
+            } else {
+              // Hero is in view
+              header.classList.add('opacity-0', '-translate-y-full')
+            }
+          })
+        },
+        {
+          root: null,
+          threshold: 0,
+        }
+      )
 
-			observer.observe(hero);
-		} else if (header) {
-			header.classList.remove("opacity-0", "-translate-y-full");
-		}
-	});
+      observer.observe(hero)
+    } else if (header) {
+      header.classList.remove('opacity-0', '-translate-y-full')
+    }
+  })
 </script>

@@ -1,15 +1,15 @@
 ---
-const year = new Date().getFullYear();
+const year = new Date().getFullYear()
 ---
 
-<footer class="py-[80px] mt-[80px] border-t border-[var(--color-border)]">
-	<div
-		class="max-w-[1600px] mx-auto px-4 md:px-[5.5rem] flex flex-col md:flex-row justify-between items-center text-[var(--color-accent)] text-xs tracking-widest uppercase gap-8"
-	>
-		<p>&copy; {year} Taichi Sakai. All rights reserved.</p>
-		<div class="flex gap-8">
-			<a href="#" class="hover:text-black transition-colors">Instagram</a>
-			<a href="#" class="hover:text-black transition-colors">Twitter</a>
-		</div>
-	</div>
+<footer class="mt-[80px] border-t border-[var(--color-border)] py-[80px]">
+  <div
+    class="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-8 px-4 text-xs tracking-widest text-[var(--color-accent)] uppercase md:flex-row md:px-[5.5rem]"
+  >
+    <p>&copy; {year} Taichi Sakai. All rights reserved.</p>
+    <div class="flex gap-8">
+      <a href="#" class="transition-colors hover:text-black">Instagram</a>
+      <a href="#" class="transition-colors hover:text-black">Twitter</a>
+    </div>
+  </div>
 </footer>

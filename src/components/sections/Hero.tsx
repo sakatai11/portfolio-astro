@@ -1,40 +1,40 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 export default function Hero() {
-  const ref = useRef(null);
+  const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"],
-  });
+    offset: ['start start', 'end start'],
+  })
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
-  const text = "FV";
+  const text = 'FV'
 
   return (
     <section
       ref={ref}
       id="hero"
-      className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-black"
+      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black"
     >
       <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
         <img
           src="https://picsum.photos/seed/fv/1920/1080"
           alt="Background"
-          className="w-full h-full object-cover opacity-60"
+          className="h-full w-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-black/40"></div>
       </motion.div>
 
       <div className="relative z-10 text-center">
-        <h1 className="text-6xl md:text-8xl font-serif tracking-widest text-white font-light flex overflow-hidden">
-          {text.split("").map((char, index) => {
+        <h1 className="flex overflow-hidden font-serif text-6xl font-light tracking-widest text-white md:text-8xl">
+          {text.split('').map((char, index) => {
             return (
               <motion.span
                 key={index}
-                initial={{ y: "100%" }}
+                initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 transition={{
                   duration: 2,
@@ -45,10 +45,10 @@ export default function Hero() {
               >
                 {char}
               </motion.span>
-            );
+            )
           })}
         </h1>
       </div>
     </section>
-  );
+  )
 }
