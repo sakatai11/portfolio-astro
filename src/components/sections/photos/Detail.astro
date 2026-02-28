@@ -1,5 +1,6 @@
 ---
 import type { PhotoDetail } from "@/types/index";
+import { isPortrait32 } from "@/utils";
 
 type Props = {
   photoDetail: PhotoDetail;
@@ -21,15 +22,15 @@ const { photoDetail } = Astro.props;
     photoDetail.image_list.map(({ url, width, height }, index) => {
       return (
         <li class="p-[4.2vw]">
-          <div class="w-full h-full flex items-center justify-center overflow-hidden group cursor-pointer">
-            <picture>
+          <div class="w-full h-full overflow-hidden group cursor-zoom-in">
+            <picture class="w-full h-full flex items-center justify-center">
               <source srcset={`${url}?fm=webp`} type="image/webp" />
               <img
                 src={url}
                 alt={`image${index + 1}`}
                 width={width}
                 height={height}
-                class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                class={`${isPortrait32(width, height) ? "w-[70%] aspect-[2/3]" : "w-full aspect-[3/2]"} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
                 loading="lazy"
                 decoding="async"
               />
