@@ -1,0 +1,31 @@
+---
+import FadeIn from '@/components/ui/FadeIn.tsx'
+import { CONTENTS } from '@/mocks/constants'
+const contents = CONTENTS
+---
+
+<section class="mx-auto max-w-[1600px] px-4 py-[80px] md:px-[5.5rem]">
+  <h2 class="mb-32 text-center font-sans text-3xl tracking-widest uppercase">
+    CONTENTS
+  </h2>
+
+  <ul class="grid grid-cols-2 gap-[7.8vw] md:grid-cols-4">
+    {
+      contents.map((content, index) => {
+        return (
+          <li class="w-full">
+            <FadeIn client:idle delay={index * 0.2} opacityDuration={0.5}>
+              <div class="group aspect-square cursor-pointer overflow-hidden">
+                <img
+                  src={content.src}
+                  alt="Content"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:opacity-80"
+                />
+              </div>
+            </FadeIn>
+          </li>
+        )
+      })
+    }
+  </ul>
+</section>

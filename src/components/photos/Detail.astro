@@ -1,0 +1,17 @@
+---
+import type { PhotoDetail } from '@/types/index'
+import Gallery from '@/components/photos/Gallery'
+
+type Props = {
+  photoDetail: PhotoDetail
+}
+
+const { photoDetail } = Astro.props
+---
+
+<h2 class="sans mb-12 text-center font-sans text-3xl tracking-widest uppercase">
+  {photoDetail.title}
+</h2>
+<p class="pb-1 text-center">{photoDetail.camera?.[0]}</p>
+<p class="text-center">{photoDetail.film?.[0]}</p>
+<Gallery client:load images={photoDetail.image_list} />

@@ -1,21 +1,20 @@
 ---
 type Props = {
-  title: string;
-};
+  title: string
+}
 
-const { title } = Astro.props;
+const { title } = Astro.props
 ---
 
-<div class="text-center mb-16">
+<div class="mb-16 text-center">
   <h1
-    class="mb-4 text-center
-      sans text-3xl font-sans tracking-widest uppercase"
+    class="sans mb-4 text-center font-sans text-3xl tracking-widest uppercase"
   >
     {title}
   </h1>
   <a
     href="/"
-    class="padding-bottom-[4px] inline-block text-sm border-b border-transparent hover:border-[var(--color-text)] transition-colors"
+    class="padding-bottom-[4px] inline-block border-b border-transparent text-sm transition-colors hover:border-[var(--color-text)]"
     >Back to Home</a
   >
 </div>

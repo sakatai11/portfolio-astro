@@ -1,35 +1,35 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/common/Header.astro";
-import Footer from "@/components/common/Footer.astro";
-import GridContainer from "@/components/common/GridContainer.astro";
-import PageTitle from "@/components/common/PageTitle.astro";
-import { EVENTS } from "@/mocks/constants";
-import { fade } from "astro:transitions";
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/components/common/Header.astro'
+import Footer from '@/components/common/Footer.astro'
+import GridContainer from '@/components/common/GridContainer.astro'
+import PageTitle from '@/components/common/PageTitle.astro'
+import { EVENTS } from '@/mocks/constants'
+import { fade } from 'astro:transitions'
 
 export async function getStaticPaths() {
   // EVENTSから重複しない年を抽出する。
-  const uniqueYears = [...new Set(EVENTS.map((event) => event.year))];
+  const uniqueYears = [...new Set(EVENTS.map((event) => event.year))]
 
   // 各年の静的パスを構築する。
   return uniqueYears.map((year) => {
-    const eventsForYear = EVENTS.filter((event) => event.year === year);
+    const eventsForYear = EVENTS.filter((event) => event.year === year)
     return {
       params: { year },
       props: {
         year,
         events: eventsForYear[0],
       },
-    };
-  });
+    }
+  })
 }
 
-const { year, events } = Astro.props;
+const { year, events } = Astro.props
 ---
 
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
-  <main class="py-12" transition:animate={fade({ duration: "0.8s" })}>
+  <main class="py-12" transition:animate={fade({ duration: '0.8s' })}>
     <PageTitle title={`${year} Timeline`} />
     <GridContainer>
       <img src={events.image} alt={year} />
