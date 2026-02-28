@@ -4,18 +4,26 @@ import { isPortrait32 } from '@/utils'
 import Modal from './Modal'
 
 export default function PhotoGallery({ images }: PhotoGalleryProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined)
+  // 現在モーダルで表示している画像のインデックス。未選択時は undefined
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    undefined
+  )
 
+  // モーダルを閉じる
   const handleClose = useCallback(() => setSelectedIndex(undefined), [])
 
+  // 前の画像へ。先頭の場合は末尾へループ
   const handlePrev = useCallback(
     () =>
       setSelectedIndex((prev) =>
-        prev !== undefined ? (prev - 1 + images.length) % images.length : undefined
+        prev !== undefined
+          ? (prev - 1 + images.length) % images.length
+          : undefined
       ),
     [images.length]
   )
 
+  // 次の画像へ。末尾の場合は先頭へループ
   const handleNext = useCallback(
     () =>
       setSelectedIndex((prev) =>
@@ -24,6 +32,8 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
     [images.length]
   )
 
+  // モーダルが開いている間のみキーボード操作を有効化
+  // Escape: 閉じる / ArrowLeft: 前へ / ArrowRight: 次へ
   useEffect(() => {
     if (selectedIndex === undefined) return
 

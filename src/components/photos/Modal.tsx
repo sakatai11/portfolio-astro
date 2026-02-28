@@ -12,6 +12,7 @@ export default function PhotoModal({
 }: PhotoModalProps) {
   const image = images[currentIndex]
 
+  // モーダルが開いている間、背景のスクロールを無効化。アンマウント時に復元
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {
