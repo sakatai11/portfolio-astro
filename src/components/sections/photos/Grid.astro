@@ -17,13 +17,18 @@ const { photos } = Astro.props;
             href={`/photos/${id}`}
             class="block overflow-hidden group cursor-pointer"
           >
-            <img
-              src={main.url}
-              alt={title}
-              width={main.width}
-              height={main.height}
-              class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
-            />
+            <picture>
+              <source srcset={`${main.url}?fm=webp`} type="image/webp" />
+              <img
+                src={main.url}
+                alt={title}
+                width={main.width}
+                height={main.height}
+                class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           </a>
         </li>
       );

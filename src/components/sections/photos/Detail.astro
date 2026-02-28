@@ -22,13 +22,18 @@ const { photoDetail } = Astro.props;
       return (
         <li class="p-[4.2vw]">
           <div class="w-full h-full flex items-center justify-center overflow-hidden group cursor-pointer">
-            <img
-              src={url}
-              alt={`image${index + 1}`}
-              width={width}
-              height={height}
-              class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
-            />
+            <picture>
+              <source srcset={`${url}?fm=webp`} type="image/webp" />
+              <img
+                src={url}
+                alt={`image${index + 1}`}
+                width={width}
+                height={height}
+                class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           </div>
         </li>
       );

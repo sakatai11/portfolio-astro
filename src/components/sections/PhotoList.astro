@@ -21,13 +21,18 @@ const { photos } = Astro.props;
           <li class={`w-full ${index < 2 ? "md:col-span-3" : "md:col-span-2"}`}>
             <FadeIn client:visible delay={index * 0.2} opacityDuration={0.5}>
               <a href={`/photos/${id}`} class="group block overflow-hidden">
-                <img
-                  src={main.url}
-                  alt={title}
-                  width={main.width}
-                  height={main.height}
-                  class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
-                />
+                <picture>
+                  <source srcset={`${main.url}?fm=webp`} type="image/webp" />
+                  <img
+                    src={main.url}
+                    alt={title}
+                    width={main.width}
+                    height={main.height}
+                    class="w-full aspect-[3/2] object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </a>
             </FadeIn>
           </li>
