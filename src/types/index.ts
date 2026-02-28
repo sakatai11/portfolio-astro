@@ -24,3 +24,15 @@ export type PhotoInfo = {
   height: number
   width: number
 }
+
+export type PhotoModalProps = {
+  images: PhotoInfo[]
+  currentIndex: number
+  onClose: () => void
+  onPrev: () => void
+  onNext: () => void
+}
+
+export type PhotoGalleryProps = {
+  images: PhotoInfo[]
+}

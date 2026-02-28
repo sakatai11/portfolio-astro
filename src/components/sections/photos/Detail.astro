@@ -1,6 +1,6 @@
 ---
 import type { PhotoDetail } from '@/types/index'
-import { isPortrait32 } from '@/utils'
+import PhotoGallery from '@/components/ui/PhotoGallery'
 
 type Props = {
   photoDetail: PhotoDetail
@@ -14,27 +14,4 @@ const { photoDetail } = Astro.props
 </h2>
 <p class="pb-1 text-center">{photoDetail.camera?.[0]}</p>
 <p class="text-center">{photoDetail.film?.[0]}</p>
-<ul class="grid grid-cols-1 md:grid-cols-3">
-  {
-    photoDetail.image_list.map(({ url, width, height }, index) => {
-      return (
-        <li class="p-[4.2vw]">
-          <div class="group h-full w-full cursor-zoom-in overflow-hidden">
-            <picture class="flex h-full w-full items-center justify-center">
-              <source srcset={`${url}?fm=webp`} type="image/webp" />
-              <img
-                src={url}
-                alt={`image${index + 1}`}
-                width={width}
-                height={height}
-                class={`${isPortrait32(width, height) ? 'aspect-[2/3] w-[70%]' : 'aspect-[3/2] w-full'} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
-                loading="lazy"
-                decoding="async"
-              />
-            </picture>
-          </div>
-        </li>
-      )
-    })
-  }
-</ul>
+<PhotoGallery client:load images={photoDetail.image_list} />
