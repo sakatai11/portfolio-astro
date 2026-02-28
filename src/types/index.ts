@@ -19,7 +19,7 @@ export type PhotoDetail = {
   image_list: PhotoInfo[]
 } & MicroCMSDate
 
-type PhotoInfo = {
+export type PhotoInfo = {
   url: string
   height: number
   width: number
