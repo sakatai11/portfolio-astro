@@ -43,46 +43,17 @@ npm run format
 
 ### ディレクトリ構成
 
-```
-src/
-├── components/
-│   ├── common/         # 共通コンポーネント
-│   │   ├── Container.astro
-│   │   ├── Footer.astro
-│   │   ├── GridContainer.astro
-│   │   ├── Header.astro
-│   │   └── PageTitle.astro
-│   ├── photos/         # 写真関連コンポーネント
-│   │   ├── Detail.astro    # 写真詳細表示
-│   │   ├── Gallery.tsx     # 写真ギャラリー (モーダル連携あり)
-│   │   ├── Grid.astro      # グリッドレイアウト
-│   │   ├── Modal.tsx       # 写真モーダル (キーボード操作対応)
-│   │   └── PhotoList.astro
-│   ├── ui/             # UIコンポーネント
-│   │   └── FadeIn.tsx      # フェードインアニメーション
-│   ├── Contents.astro  # コンテンツ一覧
-│   ├── Hero.tsx        # ヒーローセクション (React)
-│   └── Timeline.astro  # タイムライン
-├── layouts/            # ページレイアウト
-│   └── Layout.astro
-├── pages/              # ルーティング
-│   ├── index.astro         # トップページ
-│   ├── about.astro         # Aboutページ
-│   ├── [year].astro        # 年別動的ルート
-│   └── photos/
-│       ├── index.astro     # 写真一覧 (MicroCMSから取得)
-│       └── [id].astro      # 写真詳細
-├── services/           # 外部サービス連携
-│   └── microcms.ts         # MicroCMS APIクライアント
-├── types/              # TypeScript型定義
-│   └── index.ts            # PhotosMain, PhotoDetail, PhotoInfo 等
-├── utils/              # ユーティリティ関数
-│   └── index.ts            # isPortrait32 (アスペクト比判定) 等
-├── mocks/              # モックデータ
-│   └── constants.ts        # PHOTOS, CONTENTS, DETAILED_CONTENTS, EVENTS
-└── styles/             # グローバルスタイル
-    └── global.css
-```
+`src/` 配下はドメイン単位で構成されている。
+
+- `components/common/` — 共通UIコンポーネント (Header, Footer等)
+- `components/photos/` — 写真ドメインのコンポーネント
+- `components/ui/` — 汎用UIプリミティブ
+- `pages/` — ルーティング (Astroファイルベース)
+- `services/` — 外部サービス連携 (MicroCMS等)
+- `types/` — TypeScript型定義
+- `utils/` — ユーティリティ関数
+- `mocks/` — モックデータ
+- `styles/` — グローバルスタイル
 
 ### パスエイリアス
 
@@ -129,11 +100,17 @@ export const EVENTS = [...];             // タイムラインイベント
 
 ### Reactコンポーネントの統合
 
-Reactコンポーネントを使用する際は、Astroファイル内で`client:load`ディレクティブを使用する。
+Reactコンポーネントを使用する際は、Astroファイル内で適切な`client:*`ディレクティブを使用する。
+
+| ディレクティブ | 用途 | 使用例 |
+|---|---|---|
+| `client:load` | 即時インタラクティブが必要な要素 | `Hero.tsx`, `Gallery.tsx` |
+| `client:idle` | ブラウザアイドル時に読み込む要素 (パフォーマンス優先) | `FadeIn.tsx` |
 
 ```astro
 <Hero client:load />
-<PhotoGallery images={images} client:load />
+<Gallery client:load images={images} />
+<FadeIn client:idle delay={0.2} opacityDuration={0.5} />
 ```
 
 ### スタイリング
