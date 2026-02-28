@@ -4,14 +4,14 @@ import { isPortrait32 } from '@/utils'
 import Modal from './Modal'
 
 export default function PhotoGallery({ images }: PhotoGalleryProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined)
 
-  const handleClose = useCallback(() => setSelectedIndex(null), [])
+  const handleClose = useCallback(() => setSelectedIndex(undefined), [])
 
   const handlePrev = useCallback(
     () =>
       setSelectedIndex((prev) =>
-        prev !== null ? (prev - 1 + images.length) % images.length : null
+        prev !== undefined ? (prev - 1 + images.length) % images.length : undefined
       ),
     [images.length]
   )
@@ -19,13 +19,13 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
   const handleNext = useCallback(
     () =>
       setSelectedIndex((prev) =>
-        prev !== null ? (prev + 1) % images.length : null
+        prev !== undefined ? (prev + 1) % images.length : undefined
       ),
     [images.length]
   )
 
   useEffect(() => {
-    if (selectedIndex === null) return
+    if (selectedIndex === undefined) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose()
@@ -64,7 +64,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
         ))}
       </ul>
 
-      {selectedIndex !== null && (
+      {selectedIndex !== undefined && (
         <Modal
           images={images}
           currentIndex={selectedIndex}
