@@ -2,22 +2,23 @@ import type { MicroCMSQueries, MicroCMSDate } from 'microcms-js-sdk'
 
 export type MicroCmsRequest = { endpoint: string; queries?: MicroCMSQueries }
 
+export type PhotoUrl = {
+  main: PhotoInfo
+  sub: PhotoInfo
+}
+
 export type PhotosMain = {
   id: string
-  main: PhotoInfo
   title: string
-} & MicroCMSDate
+} & PhotoUrl
 
 export type PhotoDetail = {
-  id: string
   label: string[]
-  title: string
-  main: PhotoInfo
-  sub?: PhotoInfo
   camera: string[]
   film: string[]
   image_list: PhotoInfo[]
-} & MicroCMSDate
+} & PhotosMain &
+  MicroCMSDate
 
 export type PhotoInfo = {
   url: string
