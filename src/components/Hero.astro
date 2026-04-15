@@ -1,0 +1,49 @@
+---
+import { getImage } from 'astro:assets'
+import fvPc from '@/assets/fv-pc.jpg'
+import fvSp from '@/assets/fv-sp.jpg'
+
+const optimizedPc = await getImage({ src: fvPc, format: 'webp' })
+const optimizedSp = await getImage({ src: fvSp, format: 'webp' })
+
+---
+
+<section
+  id="hero"
+  class="relative flex h-screen w-full items-center justify-center overflow-hidden bg-white"
+>
+  <div id="hero-bg" class="absolute inset-0 z-0">
+    <picture class="h-full w-full">
+      <source media="(min-width: 768px)" srcset={optimizedPc.src} type="image/webp" />
+      <source srcset={optimizedSp.src} type="image/webp" />
+      <img
+        src={fvSp.src}
+        alt="Background"
+        class="animate-img-reveal h-full w-full object-cover"
+        loading="eager"
+        decoding="async"
+      />
+    </picture>
+    <div class="absolute inset-0"></div>
+  </div>
+
+  <!-- 初期表示のオーバーレイ -->
+  <div class="animate-overlay-fade pointer-events-none absolute inset-0 z-20 bg-white"></div>
+</section>
+
+<script>
+  const heroSection = document.getElementById('hero')
+  const heroBg = document.getElementById('hero-bg')
+
+  if (heroSection && heroBg) {
+    window.addEventListener(
+      'scroll',
+      () => {
+        const progress = Math.min(window.scrollY / heroSection.offsetHeight, 1)
+        heroBg.style.transform = `translateY(${progress * 30}%)`
+        heroBg.style.opacity = String(Math.max(1 - progress / 0.8, 0))
+      },
+      { passive: true },
+    )
+  }
+</script>

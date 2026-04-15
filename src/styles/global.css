@@ -52,6 +52,29 @@
   }
 }
 
+@keyframes imgReveal {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes overlayFade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@theme {
+  --animate-img-reveal: imgReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  --animate-overlay-fade: overlayFade 1.2s ease-in 0.3s forwards;
+}
+
 @keyframes customFadeIn {
   from {
     opacity: var(--fade-from, 0);
