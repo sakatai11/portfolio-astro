@@ -13,8 +13,10 @@ import { getYearRangeFilter } from '@/utils'
 export async function getStaticPaths() {
   const photos = await getMicroCmsList<PhotoDetail>({
     endpoint: 'photos',
-    queries: { limit: 4, filters: getYearRangeFilter(3) },
+    queries: { fields:['id', 'main', 'title', 'publishedAt'], filters: getYearRangeFilter(3) },
   })
+
+  console.log(photos)
 
   const yearGroups = new Map<string, PhotoDetail[]>()
   for (const photo of photos) {
