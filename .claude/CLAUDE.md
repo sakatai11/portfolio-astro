@@ -53,7 +53,6 @@ npm run format
 - `services/` — 外部サービス連携 (MicroCMS等)
 - `types/` — TypeScript型定義
 - `utils/` — ユーティリティ関数
-- `mocks/` — モックデータ
 - `styles/` — グローバルスタイル
 
 ### パスエイリアス
@@ -62,7 +61,6 @@ npm run format
 
 ```typescript
 import Layout from '@/layouts/Layout.astro'
-import { PHOTOS } from '@/mocks/constants.ts'
 import { getMicroCmsList } from '@/services/microcms'
 import { isPortrait32 } from '@/utils'
 ```
@@ -77,18 +75,11 @@ import { isPortrait32 } from '@/utils'
 
 ### データ管理
 
-**本番データ**: MicroCMS (`src/services/microcms.ts`) から取得
+**データ**: MicroCMS (`src/services/microcms.ts`) から取得
 
 ```typescript
 const photos = await getMicroCmsList<PhotosMain>({ endpoint: 'photos' })
 const detail = await getMicroCmsDetail<PhotoDetail>({ endpoint: 'photos', contentId: id })
-```
-
-**モックデータ**: `src/mocks/constants.ts` で定義
-
-```typescript
-export const EVENTS = [...];             // タイムラインイベント ([year].astro と Timeline.astro が使用)
-// PHOTOS, CONTENTS, DETAILED_CONTENTS は未使用 (MicroCMSデータに移行済み)
 ```
 
 **MicroCMS画像最適化**:
