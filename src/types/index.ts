@@ -10,6 +10,7 @@ export type PhotoUrl = {
 export type PhotosMain = {
   id: string
   title: string
+  publishedAt?: string
 } & PhotoUrl
 
 export type PhotoDetail = {

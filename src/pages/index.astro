@@ -12,7 +12,7 @@ import type { PhotosMain } from '@/types/index'
 
 const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
   endpoint: 'photos',
-  queries: { fields: ['id', 'main', 'sub', 'title'] },
+  queries: { fields: ['id', 'main', 'sub', 'title', 'publishedAt'] },
 })
 ---
 
@@ -21,7 +21,7 @@ const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
   <main>
     <Hero />
     <PhotoList photos={photos} />
-    <Timeline />
+    <Timeline photos={photos}  />
     <Contents photos={photos} />
   </main>
   <Footer />

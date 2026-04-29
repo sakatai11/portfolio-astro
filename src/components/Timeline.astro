@@ -1,7 +1,40 @@
 ---
 import FadeIn from '@/components/ui/FadeIn.tsx'
-import { EVENTS } from '@/mocks/constants'
-const events = EVENTS
+import type { PhotosMain } from '@/types/index'
+
+type Props = {
+  photos: PhotosMain[]
+}
+
+const { photos } = Astro.props
+
+/**
+ * 表示対象の年範囲を算出する。
+ */
+const currentYear = new Date().getFullYear()
+const startYear = currentYear - 3
+
+/**
+ * 年をキー、写真1枚を値とするMap。
+ * 同じ年に複数の写真がある場合、publishedAt が最も早いものを代表画像とする。
+ * yearMap に既にキーが存在する場合は上書きしない。
+ */
+const yearMap = new Map<string, PhotosMain>()
+for (const photo of photos) {
+  if (!photo.publishedAt) continue
+  const year = new Date(photo.publishedAt).getFullYear()
+  if (year < startYear || year > currentYear) continue
+  const yearStr = year.toString()
+  if (!yearMap.has(yearStr)) yearMap.set(yearStr, photo)
+}
+
+/**
+ * テンプレートで使用する表示用データの配列。
+ * 新しい年が先頭になるよう降順でソートする。
+ */
+const events = [...yearMap.entries()]
+  .sort(([a], [b]) => Number(b) - Number(a))
+  .map(([year, photo]) => ({ year, image: photo.main.url, width: photo.main.width, height: photo.main.height }))
 ---
 
 <section class="mx-auto max-w-[1600px] px-4 py-40 md:px-[5.5rem]">
@@ -18,11 +51,18 @@ const events = EVENTS
               class={`flex flex-col items-center gap-12 md:flex-row md:gap-24 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
             >
               <div class="w-full md:w-1/2">
-                <img
-                  src={event.image}
-                  alt={event.year}
-                  class="aspect-[3/2] w-full object-cover grayscale-[20%] transition-all duration-500 hover:grayscale-0"
-                />
+                <picture>
+                  <source srcset={`${event.image}?fm=webp`} type="image/webp" />
+                  <img
+                    src={event.image}
+                    alt=""
+                    width={event.width}
+                    height={event.height}
+                    class="aspect-[3/2] w-full object-cover grayscale-[20%] transition-all duration-500 hover:grayscale-0"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </div>
               <div class="w-full text-center md:w-1/2">
                 <a

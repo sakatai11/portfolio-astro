@@ -4,35 +4,41 @@ import Header from '@/components/common/Header.astro'
 import Footer from '@/components/common/Footer.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
-import { EVENTS } from '@/mocks/constants'
+import Grid from '@/components/photos/Grid.astro'
+import { getMicroCmsList } from '@/services/microcms'
+import type { PhotoDetail } from '@/types/index'
 import { fade } from 'astro:transitions'
+import { getYearRangeFilter } from '@/utils'
 
 export async function getStaticPaths() {
-  // EVENTSから重複しない年を抽出する。
-  const uniqueYears = [...new Set(EVENTS.map((event) => event.year))]
-
-  // 各年の静的パスを構築する。
-  return uniqueYears.map((year) => {
-    const eventsForYear = EVENTS.filter((event) => event.year === year)
-    return {
-      params: { year },
-      props: {
-        year,
-        events: eventsForYear[0],
-      },
-    }
+  const photos = await getMicroCmsList<PhotoDetail>({
+    endpoint: 'photos',
+    queries: { limit: 4, filters: getYearRangeFilter(3) },
   })
+
+  const yearGroups = new Map<string, PhotoDetail[]>()
+  for (const photo of photos) {
+    if (!photo.publishedAt) continue
+    const year = new Date(photo.publishedAt).getFullYear().toString()
+    if (!yearGroups.has(year)) yearGroups.set(year, [])
+    yearGroups.get(year)!.push(photo)
+  }
+
+  return [...yearGroups.entries()].map(([year, photos]) => ({
+    params: { year },
+    props: { year, photos },
+  }))
 }
 
-const { year, events } = Astro.props
+const { year, photos } = Astro.props
 ---
 
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
-  <main class="py-12" transition:animate={fade({ duration: '0.8s' })}>
-    <PageTitle title={`${year} Timeline`} />
+  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
+    <PageTitle title={`${year}`} />
     <GridContainer>
-      <img src={events.image} alt={year} />
+      <Grid photos={photos} />
     </GridContainer>
   </main>
   <Footer />

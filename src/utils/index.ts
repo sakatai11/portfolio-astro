@@ -1,3 +1,11 @@
+export const getYearRangeFilter = (yearsBack: number): string => {
+  const currentYear = new Date().getFullYear()
+  const startYear = currentYear - yearsBack
+  const startDate = `${startYear - 1}-12-31T23:59:59.999Z`
+  const endDate = `${currentYear + 1}-01-01T00:00:00.000Z`
+  return `publishedAt[greater_than]${startDate}[and]publishedAt[less_than]${endDate}`
+}
+
 /**
  * 画像の幅と高さから、アスペクト比が 2:3（縦長）かどうかを判定します。
  * @param width 画像の幅
