@@ -1,0 +1,9 @@
+[mcp_servers.astro-docs]
+url = "https://mcp.docs.astro.build/mcp"
+
+[mcp_servers.microcms-document]
+args = [
+    "-y",
+    "microcms-document-mcp-server",
+]
+command = "npx"
