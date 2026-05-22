@@ -1,0 +1,70 @@
+---
+import FadeIn from '@/components/ui/FadeIn.tsx'
+import type { PhotosMain } from '@/types/index'
+
+type Props = {
+  photos: PhotosMain[]
+}
+
+const { photos } = Astro.props
+
+const currentYear = new Date().getFullYear()
+const startYear = currentYear - 3
+
+const yearMap = new Map<string, PhotosMain[]>()
+for (const photo of photos) {
+  if (!photo.publishedAt) continue
+  const year = new Date(photo.publishedAt).getFullYear()
+  if (year < startYear || year > currentYear) continue
+  const yearStr = year.toString()
+  if (!yearMap.has(yearStr)) yearMap.set(yearStr, [])
+  yearMap.get(yearStr)!.push(photo)
+}
+
+const yearSections = [...yearMap.entries()]
+  .sort(([a], [b]) => Number(a) - Number(b))
+  .map(([year, yearPhotos]) => ({ year, photos: yearPhotos }))
+---
+
+<section class="mx-auto max-w-[1600px] px-4 py-40 md:px-[5.5rem]">
+  <h2 class="mb-32 text-center font-sans text-3xl tracking-widest uppercase">
+    TIMELINE GALLERY
+  </h2>
+
+  <div class="flex flex-col gap-24">
+    {
+      yearSections.map((section) => (
+        <FadeIn client:idle opacityDuration={1}>
+          <div>
+            <div class="mb-8">
+              <a
+                href={section.year}
+                class="relative inline-block text-2xl font-light tracking-widest text-[var(--color-text)] after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
+              >
+                {section.year}
+              </a>
+            </div>
+            <ul class="grid grid-cols-2 gap-[1.5vw] md:grid-cols-3">
+              {section.photos.map((photo) => (
+                <li class="overflow-hidden">
+                  <a href={`/${section.year}`} tabIndex={200}>
+                    <picture>
+                      <source srcset={`${photo.main.url}?fm=webp`} type="image/webp" />
+                      <img
+                        src={photo.main.url}
+                        alt=""
+                        class="aspect-square w-full object-cover grayscale-[20%] transition-all duration-500 hover:scale-105 hover:opacity-80 hover:grayscale-0"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </FadeIn>
+      ))
+    }
+  </div>
+</section>
