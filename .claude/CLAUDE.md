@@ -97,6 +97,8 @@ const detail = await getMicroCmsDetail<PhotoDetail>({ endpoint: 'photos', conten
 - **Grid.astro**: 写真一覧グリッド (`/photos` ページ用、`main` フィールド使用)
 - **Detail.astro**: 写真詳細ページ構造 (Gallery.tsx を内包)
 - **GridContainer.astro**: ページ共通のコンテンツ幅制限ラッパー
+- **Timeline.astro**: トップページの年別タイムライン (`buildYearEvents` 使用、代表画像1枚/年)
+- **TimelineGallery.astro**: `/photos` ページの年別横並びギャラリー (`buildYearEvents` 使用)
 
 ### Reactコンポーネントの統合
 
