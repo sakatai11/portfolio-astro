@@ -18,7 +18,7 @@ export const buildYearEvents = (
    */
   const publishedYears = photos
     .filter((p) => p.publishedAt)
-    .map((p) => new Date(p.publishedAt!).getFullYear())
+    .map((p) => new Date(p.publishedAt!).getUTCFullYear())
 
   if (publishedYears.length === 0) return []
 
@@ -28,15 +28,24 @@ export const buildYearEvents = (
   /**
    * 年をキー、写真1枚を値とするMap。
    * 同じ年に複数の写真がある場合、publishedAt が最も早いものを代表画像とする。
-   * yearMap に既にキーが存在する場合は上書きしない。
    */
   const yearMap = new Map<string, PhotosMain>()
   for (const photo of photos) {
     if (!photo.publishedAt) continue
-    const year = new Date(photo.publishedAt).getFullYear()
+    const year = new Date(photo.publishedAt).getUTCFullYear()
     if (year < startYear || year > latestYear) continue
     const yearStr = year.toString()
-    if (!yearMap.has(yearStr)) yearMap.set(yearStr, photo)
+    const current = yearMap.get(yearStr)
+    if (!current) {
+      yearMap.set(yearStr, photo)
+      continue
+    }
+    if (
+      new Date(photo.publishedAt).getTime() <
+      new Date(current.publishedAt!).getTime()
+    ) {
+      yearMap.set(yearStr, photo)
+    }
   }
 
   /**
