@@ -1,0 +1,56 @@
+---
+import type { PhotosMain } from '@/types/index'
+import { buildYearEvents } from '@/utils'
+
+type Props = {
+  photos: PhotosMain[]
+}
+
+const { photos } = Astro.props
+
+const events = buildYearEvents(photos)
+---
+
+<section
+  class="mx-auto max-w-[1600px] px-4 pt-18 pb-24 md:px-[5.5rem] md:pt-22 md:pb-28"
+>
+  <div class="border-t border-[var(--color-border)] pt-10 md:pt-14">
+    <h2 class="text-center font-sans text-3xl tracking-widest uppercase">
+      TIMELINE GALLERY
+    </h2>
+  </div>
+
+  <ul class="mt-12 flex flex-col gap-8 md:mt-16 md:flex-row">
+    {
+      events.map((event) => (
+        <li class="flex min-w-0 flex-1 flex-row items-center">
+          <div class="flex-[2_1_0%] overflow-hidden">
+            <a href={`/${event.year}`} class="group block">
+              <picture>
+                <source
+                  srcset={`${event.image}?fm=webp`}
+                  type="image/webp"
+                />
+                <img
+                  src={event.image}
+                  alt=""
+                  class="aspect-[3/2] w-full object-cover transition-all duration-500 group-hover:opacity-85"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+            </a>
+          </div>
+          <div class="flex-[1_0_0%] text-center">
+            <a
+              href={`/${event.year}`}
+              class="relative inline-block text-xl tracking-[0.24em] text-[var(--color-text)] after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-[var(--color-text)] after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 md:text-2xl"
+            >
+              {event.year}
+            </a>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
