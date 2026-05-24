@@ -1,5 +1,6 @@
 ---
 import FadeIn from '@/components/ui/FadeIn.tsx'
+import { buildYearEvents } from '@/utils'
 import type { PhotosMain } from '@/types/index'
 
 type Props = {
@@ -8,33 +9,7 @@ type Props = {
 
 const { photos } = Astro.props
 
-/**
- * 表示対象の年範囲を算出する。
- */
-const currentYear = new Date().getFullYear()
-const startYear = currentYear - 3
-
-/**
- * 年をキー、写真1枚を値とするMap。
- * 同じ年に複数の写真がある場合、publishedAt が最も早いものを代表画像とする。
- * yearMap に既にキーが存在する場合は上書きしない。
- */
-const yearMap = new Map<string, PhotosMain>()
-for (const photo of photos) {
-  if (!photo.publishedAt) continue
-  const year = new Date(photo.publishedAt).getFullYear()
-  if (year < startYear || year > currentYear) continue
-  const yearStr = year.toString()
-  if (!yearMap.has(yearStr)) yearMap.set(yearStr, photo)
-}
-
-/**
- * テンプレートで使用する表示用データの配列。
- * 新しい年が先頭になるよう降順でソートする。
- */
-const events = [...yearMap.entries()]
-  .sort(([a], [b]) => Number(b) - Number(a))
-  .map(([year, photo]) => ({ year, image: photo.main.url, width: photo.main.width, height: photo.main.height }))
+const events = buildYearEvents(photos)
 ---
 
 <section class="mx-auto max-w-[1600px] px-4 py-40 md:px-[5.5rem]">

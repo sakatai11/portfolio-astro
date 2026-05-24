@@ -38,3 +38,11 @@ export type PhotoModalProps = {
 export type PhotoGalleryProps = {
   images: PhotoInfo[]
 }
+
+/** タイムライン表示用の年別イベントデータ */
+export type YearEvent = {
+  year: string
+  image: string
+  width: number
+  height: number
+}
