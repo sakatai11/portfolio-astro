@@ -2,8 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**必ず日本語で回答してください**
-
 ## プロジェクト概要
 
 **技術スタック**: Astro 5 + React 19 + Tailwind CSS 4 + Framer Motion
