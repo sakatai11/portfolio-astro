@@ -51,7 +51,7 @@ export default function PhotoModal({
         {/* Prev area */}
         <button
           onClick={onPrev}
-          className="absolute top-0 left-0 z-10 hidden h-full w-1/2 cursor-w-resize items-center pl-10 opacity-0 transition-opacity duration-600 hover:opacity-100 lg:flex"
+          className="absolute top-0 left-0 z-10 hidden h-full w-1/2 cursor-w-resize items-center pl-16 opacity-0 transition-opacity duration-600 hover:opacity-100 lg:flex"
           aria-label="前の画像"
         >
           <svg
@@ -96,8 +96,8 @@ export default function PhotoModal({
           />
         </picture>
 
-        {/* Counter */}
-        <span className="absolute bottom-10 left-10 text-sm tracking-widest">
+        {/* Counter (left-16 はサイドバナーと重ならない位置) */}
+        <span className="absolute bottom-10 left-16 text-sm tracking-widest">
           {currentIndex + 1} / {images.length}
         </span>
       </motion.div>

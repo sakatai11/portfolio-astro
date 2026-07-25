@@ -9,6 +9,10 @@
   --color-text: #121212;
   --color-accent: #666666;
   --color-border: #e0e0e0;
+
+  /* サイドバナーの幅。Header.astro の w-* と Layout.astro の pl-* で共有する */
+  --spacing-banner: 3rem;
+  --spacing-banner-md: 3.5rem;
 }
 
 @layer base {

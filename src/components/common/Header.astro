@@ -1,41 +1,43 @@
 ---
-const pathname = Astro.url.pathname
-const isHomePage = pathname === '/' || pathname === ''
+const navLinks = [
+  { href: '/photos', label: 'PHOTOS' },
+  { href: '/about', label: 'About' },
+  { href: '/timeline', label: 'TIMELINE' },
+]
+
+/**
+ * ナビゲーションリンクのスタイル。
+ * 縦書きレイアウトのため、ホバー時の下線は文字列の右側に縦線として引く。
+ */
+const navLinkClass = [
+  'relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors md:text-sm',
+  'after:absolute after:top-0 after:-right-1.5 after:h-full after:w-[1px] after:origin-top after:scale-y-0 after:bg-black after:transition-transform after:duration-300 after:ease-out',
+  'hover:text-black hover:after:scale-y-100',
+].join(' ')
 ---
 
+<!--
+  writing-mode: vertical-rl 配下では Tailwind の論理プロパティ (inset-y-*, py-* 等) が
+  横方向に効いてしまうため、位置と余白は物理プロパティ (top/bottom/pt/pb) で指定する。
+-->
 <header
   id="header"
-  class:list={[
-    'top-0 z-100 w-full bg-white/90 py-6 backdrop-blur-md transition-all duration-500',
-    isHomePage ? 'fixed -translate-y-full opacity-0' : 'sticky',
-  ]}
+  class="w-banner md:w-banner-md fixed top-0 bottom-0 left-0 z-100 flex items-center justify-between pt-6 pb-6 [writing-mode:vertical-rl]"
 >
-  <div
-    class="mx-auto flex max-w-[1600px] items-center justify-between px-4 md:px-[5.5rem]"
+  <a
+    href="/"
+    class="font-serif text-base font-medium tracking-[0.2em] whitespace-nowrap transition-colors hover:text-black"
+    >TAICHI SAKAI</a
   >
-    <a
-      href="/"
-      class="font-serif text-2xl font-medium tracking-widest transition-colors hover:text-black"
-      >TAICHI SAKAI</a
-    >
-    <nav class="flex gap-10">
-      <a
-        href="/photos"
-        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
-        >PHOTOS</a
-      >
-      <a
-        href="/about"
-        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
-        >About</a
-      >
-      <a
-        href="/timeline"
-        class="relative inline-block text-xs tracking-[0.2em] text-[var(--color-accent)] uppercase transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
-        >TIMELINE</a
-      >
-    </nav>
-  </div>
+  <nav class="flex gap-8">
+    {
+      navLinks.map(({ href, label }) => (
+        <a href={href} class={navLinkClass}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
 </header>
 
 <script>
@@ -45,7 +47,6 @@ const isHomePage = pathname === '/' || pathname === ''
    */
   document.addEventListener('astro:page-load', () => {
     disableCurrentPageLinks()
-    initHeaderVisibility()
   })
 
   /**
@@ -55,39 +56,13 @@ const isHomePage = pathname === '/' || pathname === ''
   function disableCurrentPageLinks(): void {
     const currentPath = window.location.pathname
     document
-      .querySelectorAll<HTMLAnchorElement>('header a[href]:not([href^="mailto:"])')
+      .querySelectorAll<HTMLAnchorElement>(
+        'header a[href]:not([href^="mailto:"])'
+      )
       .forEach((link) => {
         if (link.getAttribute('href') === currentPath) {
           link.addEventListener('click', (e) => e.preventDefault())
         }
       })
-  }
-
-  /**
-   * Heroセクションの表示状態に応じてヘッダーの表示/非表示を切り替える。
-   * - Heroが存在する場合: IntersectionObserver でスクロール連動
-   * - Heroが存在しない場合: 常に表示
-   */
-  function initHeaderVisibility(): void {
-    const header = document.getElementById('header')
-    const hero = document.getElementById('hero')
-
-    if (header && hero) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
-              header.classList.remove('opacity-0', '-translate-y-full')
-            } else {
-              header.classList.add('opacity-0', '-translate-y-full')
-            }
-          })
-        },
-        { root: undefined, threshold: 0 },
-      )
-      observer.observe(hero)
-    } else if (header) {
-      header.classList.remove('opacity-0', '-translate-y-full')
-    }
   }
 </script>
