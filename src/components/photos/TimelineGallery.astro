@@ -25,7 +25,7 @@ const events = buildYearEvents(photos)
       events.map((event) => (
         <li>
           <div class="overflow-hidden">
-            <a href={`/${event.year}`} class="group block">
+            <a href={`/timeline/${event.year}`} class="group block">
               <picture>
                 <source
                   srcset={`${event.image}?fm=webp`}
