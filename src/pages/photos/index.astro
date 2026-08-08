@@ -6,7 +6,6 @@ import Footer from '@/components/common/Footer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
 import Grid from '@/components/photos/Grid.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
-import TimelineGallery from '@/components/photos/TimelineGallery.astro'
 
 import { getMicroCmsList } from '@/services/microcms'
 import type { PhotosMain } from '@/types/index'
@@ -25,6 +24,5 @@ const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
       <Grid photos={photos} />
     </GridContainer>
   </main>
-    <TimelineGallery photos={photos} />
   <Footer />
 </Layout>
