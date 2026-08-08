@@ -6,6 +6,7 @@ import type { PhotosMain, PhotoDetail } from '@/types/index'
 import { fade } from 'astro:transitions'
 import Header from '@/components/common/Header.astro'
 import Footer from '@/components/common/Footer.astro'
+import ContentsGallery from '@/components/photos/ContentsGallery.astro'
 
 export async function getStaticPaths() {
   const photos = await getMicroCmsList<PhotosMain>({
@@ -24,6 +25,22 @@ const photoDetail: PhotoDetail = await getMicroCmsDetail<PhotoDetail>({
   endpoint: 'photos',
   contentId: id!,
 })
+
+/**
+ * 表示中の写真と同じカメラで撮影された他の写真を取得する。
+ * camera はセレクトフィールド（配列）のため [contains] で絞り込み、表示中の写真自身は除外する。
+ */
+const camera = photoDetail.camera?.[0]
+
+const relatedPhotos: PhotosMain[] = camera
+  ? await getMicroCmsList<PhotosMain>({
+      endpoint: 'photos',
+      queries: {
+        fields: ['id', 'title', 'main', 'publishedAt'],
+        filters: `camera[contains]${camera}[and]id[not_equals]${id}`,
+      },
+    })
+  : []
 ---
 
 <Layout title={photoDetail.title}>
@@ -31,5 +48,6 @@ const photoDetail: PhotoDetail = await getMicroCmsDetail<PhotoDetail>({
   <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
     <Detail photoDetail={photoDetail} />
   </main>
+  {camera && <ContentsGallery photos={relatedPhotos} />}
   <Footer />
 </Layout>
