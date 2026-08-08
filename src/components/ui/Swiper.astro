@@ -15,6 +15,10 @@ type Props = {
   slidesPerViewMd?: number
   /** スライド間の余白。数値は px、文字列は `7.8vw` / `24px` を受け付ける */
   spaceBetween?: number | string
+  /** 768px 未満でアクティブスライドを中央寄せするか */
+  centeredSlides?: boolean
+  /** 768px 以上でアクティブスライドを中央寄せするか（未指定時は centeredSlides を継承） */
+  centeredSlidesMd?: boolean
   /** スライド切り替えの所要時間 (ms) */
   speed?: number
   /** 左右の矢印を表示するか（768px 未満では常に非表示。スワイプ操作のみ） */
@@ -29,6 +33,8 @@ const {
   slidesPerView = 1,
   slidesPerViewMd = slidesPerView,
   spaceBetween = 0,
+  centeredSlides = false,
+  centeredSlidesMd = centeredSlides,
   speed = 800,
   navigation = true,
   navigationOffset = '24px',
@@ -39,6 +45,8 @@ const config = JSON.stringify({
   slidesPerView,
   slidesPerViewMd,
   spaceBetween,
+  centeredSlides,
+  centeredSlidesMd,
   speed,
 })
 ---
@@ -132,6 +140,8 @@ const config = JSON.stringify({
     slidesPerView: number
     slidesPerViewMd: number
     spaceBetween: number | string
+    centeredSlides: boolean
+    centeredSlidesMd: boolean
     speed: number
   }
 
@@ -151,11 +161,14 @@ const config = JSON.stringify({
    * breakpoints は指定値でパラメータを上書きしてしまい vw 指定と併用できないため、
    * ブレークポイントとリサイズの反映を自前で行う。
    */
-  const responsiveParams = (config: SwiperConfig) => ({
-    slidesPerView:
-      window.innerWidth >= 768 ? config.slidesPerViewMd : config.slidesPerView,
-    spaceBetween: resolveSpaceBetween(config.spaceBetween),
-  })
+  const responsiveParams = (config: SwiperConfig) => {
+    const isMd = window.innerWidth >= 768
+    return {
+      slidesPerView: isMd ? config.slidesPerViewMd : config.slidesPerView,
+      spaceBetween: resolveSpaceBetween(config.spaceBetween),
+      centeredSlides: isMd ? config.centeredSlidesMd : config.centeredSlides,
+    }
+  }
 
   const initSwipers = () => {
     document.querySelectorAll<HTMLElement>('[data-swiper]').forEach((root) => {
