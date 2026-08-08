@@ -1,0 +1,200 @@
+---
+/**
+ * Swiper の汎用ラッパー。
+ * スライドは slot で受け取るため、呼び出し側は `swiper-slide` クラスを持つ要素を渡す。
+ *
+ * @example
+ * <Swiper class="px-20" slidesPerView={1} slidesPerViewMd={3} spaceBetween="7.8vw">
+ *   {items.map((item) => <li class="swiper-slide">...</li>)}
+ * </Swiper>
+ */
+type Props = {
+  /** 768px 未満での表示枚数 */
+  slidesPerView?: number
+  /** 768px 以上での表示枚数 */
+  slidesPerViewMd?: number
+  /** スライド間の余白。数値は px、文字列は `7.8vw` / `24px` を受け付ける */
+  spaceBetween?: number | string
+  /** スライド切り替えの所要時間 (ms) */
+  speed?: number
+  /** 左右の矢印を表示するか（768px 未満では常に非表示。スワイプ操作のみ） */
+  navigation?: boolean
+  /** 矢印の左右オフセット。余白中央に置くなら (余白 - 矢印サイズ) / 2 */
+  navigationOffset?: string
+  /** ルート要素に付与するクラス。左右余白やマージンの指定に使う */
+  class?: string
+}
+
+const {
+  slidesPerView = 1,
+  slidesPerViewMd = slidesPerView,
+  spaceBetween = 0,
+  speed = 800,
+  navigation = true,
+  navigationOffset = '24px',
+  class: className,
+} = Astro.props
+
+const config = JSON.stringify({
+  slidesPerView,
+  slidesPerViewMd,
+  spaceBetween,
+  speed,
+})
+---
+
+<div
+  class:list={['relative', className]}
+  style={`--swiper-navigation-sides-offset: ${navigationOffset}`}
+  data-swiper
+  data-swiper-config={config}
+>
+  <div class="swiper">
+    <ul class="swiper-wrapper">
+      <slot />
+    </ul>
+  </div>
+
+  {
+    navigation && (
+      /* 矢印はスライドに重ねず、ルート要素の左右余白に配置する。
+         svg を自前で入れると Swiper 既定のアイコンは注入されない。
+         .swiper-navigation-icon は prev 側で自動的に 180deg 回転する */
+      <Fragment>
+        <div class="swiper-button-prev">
+          <svg
+            class="swiper-navigation-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 3.5 17.5 12 9 20.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="square"
+            />
+          </svg>
+        </div>
+        <div class="swiper-button-next">
+          <svg
+            class="swiper-navigation-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 3.5 17.5 12 9 20.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="square"
+            />
+          </svg>
+        </div>
+      </Fragment>
+    )
+  }
+</div>
+
+<style>
+  [data-swiper] {
+    --swiper-navigation-size: 32px;
+    --swiper-navigation-color: var(--color-accent);
+  }
+
+  /* サイトのヘアライン基調に合わせ、ホバーでリンクと同じ色変化 (300ms) を与える */
+  [data-swiper] .swiper-button-prev,
+  [data-swiper] .swiper-button-next {
+    transition: color 300ms;
+  }
+
+  [data-swiper] .swiper-button-prev:hover,
+  [data-swiper] .swiper-button-next:hover {
+    color: var(--color-text);
+  }
+
+  /* SP は矢印を出さず、スワイプ操作のみで送る */
+  @media (max-width: 767px) {
+    [data-swiper] .swiper-button-prev,
+    [data-swiper] .swiper-button-next {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import Swiper from 'swiper'
+  import { Navigation } from 'swiper/modules'
+  import 'swiper/css'
+  import 'swiper/css/navigation'
+
+  type SwiperConfig = {
+    slidesPerView: number
+    slidesPerViewMd: number
+    spaceBetween: number | string
+    speed: number
+  }
+
+  let instances: Swiper[] = []
+
+  /** `7.8vw` / `24px` / 数値 を px に解決する */
+  const resolveSpaceBetween = (value: number | string): number => {
+    if (typeof value === 'number') return value
+    const amount = parseFloat(value)
+    if (Number.isNaN(amount)) return 0
+    return value.trim().endsWith('vw')
+      ? (window.innerWidth * amount) / 100
+      : amount
+  }
+
+  /**
+   * breakpoints は指定値でパラメータを上書きしてしまい vw 指定と併用できないため、
+   * ブレークポイントとリサイズの反映を自前で行う。
+   */
+  const responsiveParams = (config: SwiperConfig) => ({
+    slidesPerView:
+      window.innerWidth >= 768 ? config.slidesPerViewMd : config.slidesPerView,
+    spaceBetween: resolveSpaceBetween(config.spaceBetween),
+  })
+
+  const initSwipers = () => {
+    document.querySelectorAll<HTMLElement>('[data-swiper]').forEach((root) => {
+      const el = root.querySelector<HTMLElement>('.swiper')
+      if (!el) return
+
+      const config: SwiperConfig = JSON.parse(root.dataset.swiperConfig ?? '{}')
+
+      instances.push(
+        new Swiper(el, {
+          modules: [Navigation],
+          ...responsiveParams(config),
+          // 1枚ずつスライドし、端で停止する（ループなし）
+          slidesPerGroup: 1,
+          speed: config.speed,
+          watchOverflow: true,
+          // 矢印は .swiper の外（余白側）にあるため、root から取得する
+          navigation: {
+            prevEl: root.querySelector<HTMLElement>('.swiper-button-prev'),
+            nextEl: root.querySelector<HTMLElement>('.swiper-button-next'),
+          },
+          on: {
+            resize: (instance) => {
+              Object.assign(instance.params, responsiveParams(config))
+              instance.update()
+            },
+          },
+        })
+      )
+    })
+  }
+
+  /**
+   * ClientRouter によるページ遷移ではモジュールスクリプトが再実行されないため、
+   * astro:page-load で毎回初期化し、遷移直前にインスタンスを破棄する。
+   */
+  document.addEventListener('astro:page-load', initSwipers)
+  document.addEventListener('astro:before-swap', () => {
+    instances.forEach((instance) => instance.destroy(true, true))
+    instances = []
+  })
+</script>

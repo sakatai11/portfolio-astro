@@ -1,5 +1,6 @@
 ---
 import type { PhotosMain } from '@/types/index'
+import Swiper from '@/components/ui/Swiper.astro'
 
 type Props = {
   photos: PhotosMain[]
@@ -8,18 +9,27 @@ type Props = {
 const { photos } = Astro.props
 ---
 
+<!-- section: body が flex コンテナのため、mx-auto だけでは幅が内容に縮む。w-full で全幅を確保する -->
 {
   photos.length > 0 && (
-    <section class="mx-auto max-w-[1600px] px-6 pb-16 md:px-[5.5rem] md:pb-20">
+    <section class="mx-auto w-full max-w-[1600px] px-6 pb-16 md:pb-20">
       <div class="border-t border-[var(--color-border)] pt-16 md:pt-18">
         <h2 class="text-center font-sans text-3xl tracking-widest uppercase">
           CONTENTS
         </h2>
       </div>
 
-      <ul class="mt-12 grid grid-cols-1 gap-[7.8vw] px-20 md:mt-16 md:grid-cols-3">
+      {/* md 以上の px-20 (80px) は矢印を置くための余白。Swiper 側で
+          (80 - 32) / 2 = 24px オフセットして中央に配置される。
+          SP は矢印を出さないため余白を px-16 に詰める */}
+      <Swiper
+        class="mt-12 md:mt-16 md:px-20"
+        slidesPerView={1}
+        slidesPerViewMd={3}
+        spaceBetween="7.8vw"
+      >
         {photos.map(({ id, title, main }) => (
-          <li>
+          <li class="swiper-slide">
             <div class="overflow-hidden">
               <a href={`/photos/${id}`} class="group block">
                 <picture>
@@ -38,7 +48,7 @@ const { photos } = Astro.props
             </div>
           </li>
         ))}
-      </ul>
+      </Swiper>
     </section>
   )
 }
