@@ -13,7 +13,7 @@ const { photos } = Astro.props
 {
   photos.length > 0 && (
     <section class="mx-auto w-full max-w-[1600px] border-t border-[var(--color-border)]">
-      <div class="pb-16 md:pb-20 -ml-12">
+      <div class="pb-16 -ml-12 md:pb-20 md:ml-0">
         <div class="pt-16 md:pt-18">
           <h2 class="text-center font-sans text-3xl tracking-widest uppercase">
             CONTENTS
@@ -24,7 +24,7 @@ const { photos } = Astro.props
             (80 - 32) / 2 = 24px オフセットして中央に配置される。
             SP は矢印を出さないため余白を px-16 に詰める */}
         <Swiper
-          class="mt-12 md:mt-1 md:px-20"
+          class="mt-12 md:px-20"
           slidesPerView={1.4}
           slidesPerViewMd={3}
           spaceBetween="7.8vw"

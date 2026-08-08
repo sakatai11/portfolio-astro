@@ -8,7 +8,7 @@ type Props = {
 const { photos } = Astro.props
 ---
 
-<ul class="grid grid-cols-1 gap-[7.8vw] md:grid-cols-3">
+<ul class="grid grid-cols-1 gap-3 md:gap-[7.8vw] md:grid-cols-3">
   {
     photos.map(({ id, main, title }) => {
       return (
