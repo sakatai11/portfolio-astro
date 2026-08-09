@@ -7,7 +7,6 @@ import PageTitle from '@/components/common/PageTitle.astro'
 import Grid from '@/components/photos/Grid.astro'
 import { getMicroCmsList } from '@/services/microcms'
 import type { PhotoDetail } from '@/types/index'
-import { fade } from 'astro:transitions'
 import { getYearRangeFilter } from '@/utils'
 
 export async function getStaticPaths() {
@@ -37,7 +36,7 @@ const { year, photos } = Astro.props
 
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
-  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full py-12">
     <PageTitle title={`${year}`} />
     <GridContainer>
       <Grid photos={photos} />

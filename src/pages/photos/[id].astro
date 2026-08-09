@@ -3,7 +3,6 @@ import Layout from '@/layouts/Layout.astro'
 import Detail from '@/components/photos/Detail.astro'
 import { getMicroCmsList, getMicroCmsDetail } from '@/services/microcms'
 import type { PhotosMain, PhotoDetail } from '@/types/index'
-import { fade } from 'astro:transitions'
 import Header from '@/components/common/Header.astro'
 import Footer from '@/components/common/Footer.astro'
 import ContentsGallery from '@/components/photos/ContentsGallery.astro'
@@ -45,7 +44,7 @@ const relatedPhotos: PhotosMain[] = camera
 
 <Layout title={photoDetail.title}>
   <Header />
-  <main class="w-full" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full">
     <Detail photoDetail={photoDetail} />
     {camera && <ContentsGallery photos={relatedPhotos} />}
   </main>

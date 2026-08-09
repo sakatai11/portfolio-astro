@@ -203,10 +203,11 @@ const config = JSON.stringify({
 
   /**
    * ClientRouter によるページ遷移ではモジュールスクリプトが再実行されないため、
-   * astro:page-load で毎回初期化し、遷移直前にインスタンスを破棄する。
+   * astro:page-load で毎回初期化する。
+   * 旧画面のレイアウトをフェード前に変えないよう、インスタンスの破棄は画面交換後に行う。
    */
   document.addEventListener('astro:page-load', initSwipers)
-  document.addEventListener('astro:before-swap', () => {
+  document.addEventListener('astro:after-swap', () => {
     instances.forEach((instance) => instance.destroy(true, true))
     instances = []
   })

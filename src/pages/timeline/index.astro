@@ -1,7 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/components/common/Header.astro'
-import { fade } from 'astro:transitions'
 import Footer from '@/components/common/Footer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
@@ -21,7 +20,7 @@ const events = buildYearEvents(photos)
 
 <Layout title="Photos | Taichi Sakai">
   <Header />
-  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full py-12">
     <PageTitle title="TIMELINE" />
     <GridContainer>
       <YearGrid events={events} />
