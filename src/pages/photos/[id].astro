@@ -45,9 +45,9 @@ const relatedPhotos: PhotosMain[] = camera
 
 <Layout title={photoDetail.title}>
   <Header />
-  <main class="w-full py-20" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full" transition:animate={fade({ duration: '0.8s' })}>
     <Detail photoDetail={photoDetail} />
+    {camera && <ContentsGallery photos={relatedPhotos} />}
   </main>
-  {camera && <ContentsGallery photos={relatedPhotos} />}
   <Footer />
 </Layout>

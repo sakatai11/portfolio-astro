@@ -9,9 +9,11 @@ type Props = {
 const { photoDetail } = Astro.props
 ---
 
-<h2 class="sans mt-4 mb-12 text-center font-sans text-3xl tracking-widest uppercase">
-  {photoDetail.title}
-</h2>
-<p class="pb-1 text-center">{photoDetail.camera?.[0]}</p>
-<p class="text-center">{photoDetail.film?.[0]}</p>
-<Gallery client:load images={photoDetail.image_list} />
+<section class="py-20">
+  <h2 class="sans mt-4 mb-12 text-center font-sans text-3xl tracking-widest uppercase">
+    {photoDetail.title}
+  </h2>
+  <p class="pb-1 text-center">{photoDetail.camera?.[0]}</p>
+  <p class="text-center">{photoDetail.film?.[0]}</p>
+  <Gallery client:load images={photoDetail.image_list} />
+</section>

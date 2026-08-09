@@ -24,7 +24,8 @@ const { photos } = Astro.props
             (80 - 32) / 2 = 24px オフセットして中央に配置される。
             SP は矢印を出さないため余白を px-16 に詰める */}
         <Swiper
-          class="mt-16 md:px-20"
+          class="mt-16 md:px-[12vw]"
+          navigationOffset="80px"
           slidesPerView={1.4}
           slidesPerViewMd={3}
           spaceBetween="7.8vw"
