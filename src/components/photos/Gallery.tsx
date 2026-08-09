@@ -49,7 +49,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
 
   return (
     <>
-      <ul className="grid grid-cols-1 pl-4 md:pl-0 md:grid-cols-3">
+      <ul className="grid grid-cols-1 pl-4 mt-6 md:pl-0 md:grid-cols-3 md:mt-0">
         {images.map(({ url, width, height }, index) => (
           <li key={url} className="pt-3 md:p-[4.2vw]">
             <button
