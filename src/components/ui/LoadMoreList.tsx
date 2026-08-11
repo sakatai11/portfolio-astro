@@ -64,48 +64,6 @@ export default function LoadMoreList<T>({
     history.replaceState(history.state, '', url)
   }
 
-  /** 離脱時のスクロール位置の保存キー。一覧ページごとに分ける */
-  const scrollStorageKey = () => `loadMoreScroll:${window.location.pathname}`
-
-  /**
-   * 復元取得の完了後に、離脱時のスクロール位置へ戻す。
-   * ブラウザや ClientRouter のスクロール復元は island のハイドレーションより
-   * 先に走るため、その時点では初期表示分の高さしかなく、深い位置は
-   * ページ末尾へ丸められる。history.state のスクロール位置もこの丸めた値に
-   * 書き換わってしまうので、離脱時に自前で控えた値を使う。
-   */
-  const restoreScrollPosition = () => {
-    const saved = Number(sessionStorage.getItem(scrollStorageKey()))
-
-    if (!Number.isFinite(saved) || saved <= window.scrollY) return
-
-    // 追記分の描画が反映されてからでないと目的の位置までスクロールできない
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: saved, behavior: 'instant' })
-      })
-    })
-  }
-
-  // 離脱時のスクロール位置を控える (復元取得の完了後に戻すため)
-  useEffect(() => {
-    const saveScrollPosition = () => {
-      sessionStorage.setItem(scrollStorageKey(), String(window.scrollY))
-    }
-
-    // ClientRouter でのページ遷移とリロード・離脱の両方を拾う
-    document.addEventListener('astro:before-preparation', saveScrollPosition)
-    window.addEventListener('pagehide', saveScrollPosition)
-
-    return () => {
-      document.removeEventListener(
-        'astro:before-preparation',
-        saveScrollPosition
-      )
-      window.removeEventListener('pagehide', saveScrollPosition)
-    }
-  }, [])
-
   // URL のクエリで指定されたページまで表示を復元する (ブラウザバック・リロード対策)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -154,8 +112,6 @@ export default function LoadMoreList<T>({
             break
           }
         }
-
-        restoreScrollPosition()
       } catch {
         if (cancelled) return
 
