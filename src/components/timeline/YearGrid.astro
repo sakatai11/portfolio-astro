@@ -18,9 +18,10 @@ const { events } = Astro.props
         >
           <picture>
             <source srcset={`${event.image}?fm=webp`} type="image/webp" />
+            <!-- 年は直下の span で読み上げられるため、画像は装飾扱いにして重複読み上げを防ぐ -->
             <img
               src={event.image}
-              alt={event.year}
+              alt=""
               width={event.width}
               height={event.height}
               class="aspect-[3/2] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"

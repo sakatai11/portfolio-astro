@@ -15,8 +15,6 @@ export async function getStaticPaths() {
     queries: { fields:['id', 'main', 'title', 'publishedAt'], filters: getYearRangeFilter(3) },
   })
 
-  console.log(photos)
-
   const yearGroups = new Map<string, PhotoDetail[]>()
   for (const photo of photos) {
     if (!photo.publishedAt) continue
