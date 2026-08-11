@@ -14,6 +14,17 @@ export const getMicroCmsList = async <T>({
   return response.contents
 }
 
+/**
+ * contents に加えて totalCount 等を含むレスポンス全体を返す。
+ * ページネーション (次ページの有無判定) が必要な場合に使用する。
+ */
+export const getMicroCmsListResponse = async <T>({
+  endpoint,
+  queries,
+}: MicroCmsRequest) => {
+  return await microCMSClient.getList<T>({ endpoint, queries })
+}
+
 export const getMicroCmsDetail = async <T>({
   endpoint,
   contentId,
