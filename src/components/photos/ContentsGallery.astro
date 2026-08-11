@@ -1,0 +1,59 @@
+---
+import type { PhotosMain } from '@/types/index'
+import Swiper from '@/components/ui/Swiper.astro'
+
+type Props = {
+  photos: PhotosMain[]
+}
+
+const { photos } = Astro.props
+---
+
+<!-- section: body が flex コンテナのため、mx-auto だけでは幅が内容に縮む。w-full で全幅を確保する -->
+{
+  photos.length > 0 && (
+    <section class="mx-auto w-full max-w-[1600px] border-t border-[var(--color-border)]">
+      <div class="pb-16 -ml-12 md:pb-20 md:ml-0">
+        <div class="pt-16 md:pt-18">
+          <h2 class="ml-12 text-center font-sans text-3xl tracking-widest uppercase md:ml-0">
+            CONTENTS
+          </h2>
+        </div>
+
+        {/* md 以上の px-20 (80px) は矢印を置くための余白。Swiper 側で
+            (80 - 32) / 2 = 24px オフセットして中央に配置される。
+            SP は矢印を出さないため余白を px-16 に詰める */}
+        <Swiper
+          class="mt-16 md:px-[12vw]"
+          navigationOffset="80px"
+          slidesPerView={1.4}
+          slidesPerViewMd={3}
+          spaceBetween="7.8vw"
+          centeredSlides={true}
+          centeredSlidesMd={false}
+        >
+          {photos.map(({ id, title, main }) => (
+            <li class="swiper-slide">
+              <div class="overflow-hidden">
+                <a href={`/photos/${id}`} class="group block">
+                  <picture>
+                    <source srcset={`${main.url}?fm=webp`} type="image/webp" />
+                    <img
+                      src={main.url}
+                      alt={title}
+                      width={main.width}
+                      height={main.height}
+                      class="aspect-[3/2] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </a>
+              </div>
+            </li>
+          ))}
+        </Swiper>
+      </div>
+    </section>
+  )
+}

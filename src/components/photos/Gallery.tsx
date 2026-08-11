@@ -49,9 +49,9 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
 
   return (
     <>
-      <ul className="grid grid-cols-1 md:grid-cols-3">
+      <ul className="grid grid-cols-1 pl-4 mt-6 md:pl-0 md:grid-cols-3 md:mt-0">
         {images.map(({ url, width, height }, index) => (
-          <li key={url} className="p-[4.2vw]">
+          <li key={url} className="pt-3 md:p-[4.2vw]">
             <button
               type="button"
               className="group h-full w-full cursor-zoom-in overflow-hidden"
@@ -64,7 +64,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
                   alt={`image${index + 1}`}
                   width={width}
                   height={height}
-                  className={`${isPortrait32(width, height) ? 'aspect-[2/3] w-[70%]' : 'aspect-[3/2] w-full'} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
+                  className={`${isPortrait32(width, height) ? 'aspect-[2/3] md:w-[70%] w-full' : 'aspect-[3/2] w-full'} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
                   loading="lazy"
                   decoding="async"
                 />

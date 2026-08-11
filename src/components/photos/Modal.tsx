@@ -51,7 +51,7 @@ export default function PhotoModal({
         {/* Prev area */}
         <button
           onClick={onPrev}
-          className="absolute top-0 left-0 z-10 hidden h-full w-1/2 cursor-w-resize items-center pl-10 opacity-0 transition-opacity duration-600 hover:opacity-100 lg:flex"
+          className="absolute top-0 left-0 z-10 flex h-full w-1/2 cursor-w-resize items-center pl-4 opacity-100 transition-opacity duration-600 lg:pl-16 lg:opacity-0 lg:hover:opacity-100"
           aria-label="前の画像"
         >
           <svg
@@ -61,6 +61,7 @@ export default function PhotoModal({
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
+            className="hidden lg:block"
           >
             <polyline points="15,4 7,12 15,20" />
           </svg>
@@ -69,7 +70,7 @@ export default function PhotoModal({
         {/* Next area */}
         <button
           onClick={onNext}
-          className="absolute top-0 right-0 z-10 hidden h-full w-1/2 cursor-e-resize items-center justify-end pr-10 opacity-0 transition-opacity duration-600 hover:opacity-100 lg:flex"
+          className="absolute top-0 right-0 z-10 flex h-full w-1/2 cursor-e-resize items-center justify-end pr-4 opacity-100 transition-opacity duration-600 lg:pr-10 lg:opacity-0 lg:hover:opacity-100"
           aria-label="次の画像"
         >
           <svg
@@ -79,6 +80,7 @@ export default function PhotoModal({
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
+            className="hidden lg:block"
           >
             <polyline points="9,4 17,12 9,20" />
           </svg>
@@ -96,8 +98,8 @@ export default function PhotoModal({
           />
         </picture>
 
-        {/* Counter */}
-        <span className="absolute bottom-10 left-10 text-sm tracking-widest">
+        {/* Counter (left-16 はサイドバナーと重ならない位置) */}
+        <span className="absolute bottom-10 left-16 text-sm tracking-widest">
           {currentIndex + 1} / {images.length}
         </span>
       </motion.div>

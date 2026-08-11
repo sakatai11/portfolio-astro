@@ -1,30 +1,39 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/components/common/Header.astro'
-import { fade } from 'astro:transitions'
 import Footer from '@/components/common/Footer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
-import Grid from '@/components/photos/Grid.astro'
+import PhotoLoadMoreGrid from '@/components/photos/PhotoLoadMoreGrid.tsx'
 import GridContainer from '@/components/common/GridContainer.astro'
-import TimelineGallery from '@/components/photos/TimelineGallery.astro'
 
-import { getMicroCmsList } from '@/services/microcms'
+import { getMicroCmsListResponse } from '@/services/microcms'
+import { PHOTOS_PER_PAGE } from '@/constants/index'
 import type { PhotosMain } from '@/types/index'
 
-const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
-  endpoint: 'photos',
-  queries: { fields: ['id', 'main', 'publishedAt'] },
-})
+const { contents: photos, totalCount } =
+  await getMicroCmsListResponse<PhotosMain>({
+    endpoint: 'photos',
+    queries: {
+      fields: ['id', 'title', 'main', 'publishedAt'],
+      limit: PHOTOS_PER_PAGE,
+    },
+  })
+
+// `/api/photos/[page].json.ts` と同じ区切りで数える必要がある
+const totalPages = Math.ceil(totalCount / PHOTOS_PER_PAGE)
 ---
 
 <Layout title="Photos | Taichi Sakai">
   <Header />
-  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full py-12">
     <PageTitle title="PHOTOS" />
     <GridContainer>
-      <Grid photos={photos} />
+      <PhotoLoadMoreGrid
+        client:idle
+        initialPhotos={photos}
+        totalPages={totalPages}
+      />
     </GridContainer>
   </main>
-    <TimelineGallery photos={photos} />
   <Footer />
 </Layout>

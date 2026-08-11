@@ -4,24 +4,21 @@ import Header from '@/components/common/Header.astro'
 import Footer from '@/components/common/Footer.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
-import Grid from '@/components/photos/Grid.astro'
-import { getMicroCmsList } from '@/services/microcms'
+import Grid from '@/components/photos/Grid.tsx'
+import { getMicroCmsAllList } from '@/services/microcms'
 import type { PhotoDetail } from '@/types/index'
-import { fade } from 'astro:transitions'
-import { getYearRangeFilter } from '@/utils'
 
 export async function getStaticPaths() {
-  const photos = await getMicroCmsList<PhotoDetail>({
+  const photos = await getMicroCmsAllList<PhotoDetail>({
     endpoint: 'photos',
-    queries: { fields:['id', 'main', 'title', 'publishedAt'], filters: getYearRangeFilter(3) },
+    queries: { fields: ['id', 'main', 'title', 'publishedAt'] },
   })
-
-  console.log(photos)
 
   const yearGroups = new Map<string, PhotoDetail[]>()
   for (const photo of photos) {
     if (!photo.publishedAt) continue
-    const year = new Date(photo.publishedAt).getFullYear().toString()
+    // 一覧 (buildYearEvents) と同じ UTC 基準で数え、生成される年が実行環境のTZで揺れないようにする
+    const year = new Date(photo.publishedAt).getUTCFullYear().toString()
     if (!yearGroups.has(year)) yearGroups.set(year, [])
     yearGroups.get(year)!.push(photo)
   }
@@ -37,7 +34,7 @@ const { year, photos } = Astro.props
 
 <Layout title={`Timeline ${year} | Taichi Sakai`}>
   <Header />
-  <main class="w-full py-12" transition:animate={fade({ duration: '0.8s' })}>
+  <main class="w-full py-12">
     <PageTitle title={`${year}`} />
     <GridContainer>
       <Grid photos={photos} />

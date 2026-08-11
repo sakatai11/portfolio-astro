@@ -30,20 +30,3 @@ const optimizedSp = await getImage({ src: fvSp, format: 'webp' })
   <!-- 初期表示のオーバーレイ -->
   <div class="animate-overlay-fade pointer-events-none absolute inset-0 z-20 bg-white"></div>
 </section>
-
-<script>
-  const heroSection = document.getElementById('hero')
-  const heroBg = document.getElementById('hero-bg')
-
-  if (heroSection && heroBg) {
-    window.addEventListener(
-      'scroll',
-      () => {
-        const progress = Math.min(window.scrollY / heroSection.offsetHeight, 1)
-        heroBg.style.transform = `translateY(${progress * 30}%)`
-        heroBg.style.opacity = String(Math.max(1 - progress / 0.8, 0))
-      },
-      { passive: true },
-    )
-  }
-</script>

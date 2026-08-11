@@ -8,13 +8,13 @@ const { title } = Astro.props
 
 <div class="mb-16 text-center">
   <h1
-    class="sans mb-4 text-center font-sans text-3xl tracking-widest uppercase"
+    class="sans my-4 text-center font-sans text-3xl tracking-widest uppercase"
   >
     {title}
   </h1>
   <a
     href="/"
-    class="padding-bottom-[4px] inline-block border-b border-transparent text-sm transition-colors hover:border-[var(--color-text)]"
+    class="relative inline-block border-b border-transparent text-sm transition-color after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out hover:text-black hover:after:scale-x-100 md:text-sm"
     >Back to Home</a
   >
 </div>

@@ -1,4 +1,5 @@
 import type { MicroCMSQueries, MicroCMSDate } from 'microcms-js-sdk'
+import type { ReactNode } from 'react'
 
 export type MicroCmsRequest = { endpoint: string; queries?: MicroCMSQueries }
 
@@ -37,6 +38,41 @@ export type PhotoModalProps = {
 
 export type PhotoGalleryProps = {
   images: PhotoInfo[]
+}
+
+/** ページ分割された静的 JSON エンドポイントのレスポンス */
+export type PaginatedResponse<T> = {
+  items: T[]
+  /** 次のページが存在するか */
+  hasNext: boolean
+}
+
+export type ButtonProps = {
+  children: ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+  /** ラベル右側に表示するアイコン */
+  icon?: ReactNode
+  className?: string
+}
+
+export type LoadMoreListProps<T> = {
+  endpoint: string
+  initialItems: T[]
+  initialHasNext: boolean
+  initialPage?: number
+  /**
+   * 取得済みの全アイテムを受け取って一覧を描画する。
+   * 表示形式は利用側が決めるため、LoadMoreList はマークアップを持たない
+   */
+  children: (items: T[]) => ReactNode
+  buttonLabel?: string
+  loadingLabel?: string
+  /** 到達ページを保持する URL クエリパラメータ名 */
+  pageParam?: string
+  /** 全体のページ数。URL クエリが範囲内かの判定に使う */
+  totalPages?: number
 }
 
 /** タイムライン表示用の年別イベントデータ */

@@ -3,14 +3,15 @@ import type { PhotosMain, YearEvent } from '@/types/index'
 /**
  * 写真データから年別タイムラインイベントの配列を生成する。
  * コンテンツが存在する最新年を起点に displayYears 年分を表示する。
+ * displayYears を省略した場合はコンテンツが存在する全年を表示する。
  * 同じ年に複数の写真がある場合、publishedAt が最も早いものを代表画像とする。
  * @param photos MicroCMS から取得した写真データの配列
- * @param displayYears 表示する年数（デフォルト: 3）
+ * @param displayYears 表示する年数（省略時は全年表示）
  * @returns 新しい年が先頭の降順でソートされた YearEvent 配列
  */
 export const buildYearEvents = (
   photos: PhotosMain[],
-  displayYears: number = 3
+  displayYears?: number
 ): YearEvent[] => {
   /**
    * コンテンツが存在する最新年を起点に表示範囲を決定する。
@@ -23,7 +24,10 @@ export const buildYearEvents = (
   if (publishedYears.length === 0) return []
 
   const latestYear = Math.max(...publishedYears)
-  const startYear = latestYear - displayYears + 1
+  const startYear =
+    displayYears === undefined
+      ? Math.min(...publishedYears)
+      : latestYear - displayYears + 1
 
   /**
    * 年をキー、写真1枚を値とするMap。
@@ -60,14 +64,6 @@ export const buildYearEvents = (
       width: photo.main.width,
       height: photo.main.height,
     }))
-}
-
-export const getYearRangeFilter = (yearsBack: number): string => {
-  const currentYear = new Date().getFullYear()
-  const startYear = currentYear - yearsBack
-  const startDate = `${startYear - 1}-12-31T23:59:59.999Z`
-  const endDate = `${currentYear + 1}-01-01T00:00:00.000Z`
-  return `publishedAt[greater_than]${startDate}[and]publishedAt[less_than]${endDate}`
 }
 
 /**

@@ -9,6 +9,10 @@
   --color-text: #121212;
   --color-accent: #666666;
   --color-border: #e0e0e0;
+
+  /* サイドバナーの幅。Header.astro の w-* と Layout.astro の pl-* で共有する */
+  --spacing-banner: 3rem;
+  --spacing-banner-md: 3.5rem;
 }
 
 @layer base {
@@ -25,7 +29,7 @@
      We apply specific line-heights to text blocks. */
 
   body {
-    @apply m-0 flex min-h-screen flex-col p-0 leading-relaxed;
+    @apply m-0 flex justify-between min-h-screen flex-col p-0 leading-relaxed;
   }
 
   h1,
@@ -92,5 +96,59 @@
 
   to {
     opacity: var(--fade-from, 0);
+  }
+}
+
+/*
+ * 長いページ要素ではなく、表示中のビューポート同士をクロスフェードする。
+ * ページ下部から遷移しても要素の座標差がスクロールとして補間されない。
+ */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pageFadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 0.5s cubic-bezier(0.76, 0, 0.24, 1) both pageFadeOut;
+}
+
+::view-transition-new(root) {
+  animation: 0.5s cubic-bezier(0.76, 0, 0.24, 1) both pageFadeIn;
+}
+
+/* Astro の View Transition フォールバックでも同じフェードを適用する */
+html[data-astro-transition-fallback='old'] body {
+  animation: 0.5s cubic-bezier(0.76, 0, 0.24, 1) both pageFadeOut;
+}
+
+html[data-astro-transition-fallback='new'] body {
+  animation: 0.5s cubic-bezier(0.76, 0, 0.24, 1) both pageFadeIn;
+}
+
+/* 通常時のスムーススクロールは維持し、ページ交換時だけ即時復元する */
+html[data-astro-transition] {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  html[data-astro-transition-fallback] body {
+    animation: none;
   }
 }

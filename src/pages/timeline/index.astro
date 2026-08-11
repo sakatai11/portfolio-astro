@@ -1,0 +1,30 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/components/common/Header.astro'
+import Footer from '@/components/common/Footer.astro'
+import PageTitle from '@/components/common/PageTitle.astro'
+import GridContainer from '@/components/common/GridContainer.astro'
+import YearGrid from '@/components/timeline/YearGrid.astro'
+
+import { getMicroCmsAllList } from '@/services/microcms'
+import type { PhotosMain } from '@/types/index'
+import { buildYearEvents } from '@/utils'
+
+const photos: PhotosMain[] = await getMicroCmsAllList<PhotosMain>({
+  endpoint: 'photos',
+  queries: { fields: ['id', 'main', 'sub', 'title', 'publishedAt'] },
+})
+
+const events = buildYearEvents(photos)
+---
+
+<Layout title="Timeline | Taichi Sakai">
+  <Header />
+  <main class="w-full py-12">
+    <PageTitle title="TIMELINE" />
+    <GridContainer>
+      <YearGrid events={events} />
+    </GridContainer>
+  </main>
+  <Footer />
+</Layout>
