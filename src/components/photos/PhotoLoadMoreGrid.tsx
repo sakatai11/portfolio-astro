@@ -5,8 +5,8 @@ import type { PhotosMain } from '@/types/index'
 type PhotoLoadMoreGridProps = {
   /** ビルド時に取得済みの初期表示分 */
   initialPhotos: PhotosMain[]
-  /** 初期表示時点で次のページが存在するか */
-  hasNext: boolean
+  /** 写真全体のページ数 */
+  totalPages: number
 }
 
 /**
@@ -15,13 +15,14 @@ type PhotoLoadMoreGridProps = {
  */
 export default function PhotoLoadMoreGrid({
   initialPhotos,
-  hasNext,
+  totalPages,
 }: PhotoLoadMoreGridProps) {
   return (
     <LoadMoreList<PhotosMain>
       endpoint="/api/photos"
       initialItems={initialPhotos}
-      initialHasNext={hasNext}
+      initialHasNext={totalPages > 1}
+      totalPages={totalPages}
     >
       {(photos) => <Grid photos={photos} />}
     </LoadMoreList>

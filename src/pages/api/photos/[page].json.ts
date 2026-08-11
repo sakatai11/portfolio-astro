@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro'
-import { getMicroCmsList } from '@/services/microcms'
-import { MICROCMS_MAX_LIMIT, PHOTOS_PER_PAGE } from '@/constants/index'
+import { getMicroCmsAllList } from '@/services/microcms'
+import { PHOTOS_PER_PAGE } from '@/constants/index'
 import type { PaginatedResponse, PhotosMain } from '@/types/index'
 
 /**
@@ -14,12 +14,10 @@ import type { PaginatedResponse, PhotosMain } from '@/types/index'
  * (LoadMoreList が fetch するのは 2 ページ目以降のみ)。
  */
 export const getStaticPaths = (async () => {
-  const photos = await getMicroCmsList<PhotosMain>({
+  // 全ページ分の JSON を生成するため、件数の上限なく全件取得する
+  const photos = await getMicroCmsAllList<PhotosMain>({
     endpoint: 'photos',
-    queries: {
-      fields: ['id', 'title', 'main', 'publishedAt'],
-      limit: MICROCMS_MAX_LIMIT,
-    },
+    queries: { fields: ['id', 'title', 'main', 'publishedAt'] },
   })
 
   const totalPages = Math.ceil(photos.length / PHOTOS_PER_PAGE)

@@ -5,14 +5,13 @@ import Footer from '@/components/common/Footer.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
 import Grid from '@/components/photos/Grid.tsx'
-import { getMicroCmsList } from '@/services/microcms'
+import { getMicroCmsAllList } from '@/services/microcms'
 import type { PhotoDetail } from '@/types/index'
-import { getYearRangeFilter } from '@/utils'
 
 export async function getStaticPaths() {
-  const photos = await getMicroCmsList<PhotoDetail>({
+  const photos = await getMicroCmsAllList<PhotoDetail>({
     endpoint: 'photos',
-    queries: { fields:['id', 'main', 'title', 'publishedAt'], filters: getYearRangeFilter(3) },
+    queries: { fields: ['id', 'main', 'title', 'publishedAt'] },
   })
 
   const yearGroups = new Map<string, PhotoDetail[]>()

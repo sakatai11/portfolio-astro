@@ -121,6 +121,10 @@ const detail = await getMicroCmsDetail<PhotoDetail>({ endpoint: 'photos', conten
 - 1ページ目は `/photos` が直接 MicroCMS から取得するため生成しない (fetch されるのは2ページ目以降)
 - 件数は `src/constants/index.ts` の `PHOTOS_PER_PAGE` をページとエンドポイントで共有する
 - データはビルド時点で固定されるため、MicroCMS 更新時は再ビルドが必要
+- 到達ページは URL クエリ (`?page=n`) に `replaceState` で保持する。island の state は
+  ページ遷移で破棄されるため、これがないとブラウザバックやリロードで初期表示件数に戻る
+- 復元はマウント時に不足ページを順に取得して行う。クエリが `totalPages` の範囲外なら
+  取得せずクエリを削除して初期表示に戻す
 
 ### Reactコンポーネントの統合
 

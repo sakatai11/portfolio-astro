@@ -69,6 +69,10 @@ export type LoadMoreListProps<T> = {
   children: (items: T[]) => ReactNode
   buttonLabel?: string
   loadingLabel?: string
+  /** 到達ページを保持する URL クエリパラメータ名 */
+  pageParam?: string
+  /** 全体のページ数。URL クエリが範囲内かの判定に使う */
+  totalPages?: number
 }
 
 /** タイムライン表示用の年別イベントデータ */

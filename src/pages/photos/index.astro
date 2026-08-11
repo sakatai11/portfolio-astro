@@ -18,6 +18,9 @@ const { contents: photos, totalCount } =
       limit: PHOTOS_PER_PAGE,
     },
   })
+
+// `/api/photos/[page].json.ts` と同じ区切りで数える必要がある
+const totalPages = Math.ceil(totalCount / PHOTOS_PER_PAGE)
 ---
 
 <Layout title="Photos | Taichi Sakai">
@@ -28,7 +31,7 @@ const { contents: photos, totalCount } =
       <PhotoLoadMoreGrid
         client:idle
         initialPhotos={photos}
-        hasNext={totalCount > PHOTOS_PER_PAGE}
+        totalPages={totalPages}
       />
     </GridContainer>
   </main>

@@ -6,11 +6,11 @@ import PageTitle from '@/components/common/PageTitle.astro'
 import GridContainer from '@/components/common/GridContainer.astro'
 import YearGrid from '@/components/timeline/YearGrid.astro'
 
-import { getMicroCmsList } from '@/services/microcms'
+import { getMicroCmsAllList } from '@/services/microcms'
 import type { PhotosMain } from '@/types/index'
 import { buildYearEvents } from '@/utils'
 
-const photos: PhotosMain[] = await getMicroCmsList<PhotosMain>({
+const photos: PhotosMain[] = await getMicroCmsAllList<PhotosMain>({
   endpoint: 'photos',
   queries: { fields: ['id', 'main', 'sub', 'title', 'publishedAt'] },
 })
