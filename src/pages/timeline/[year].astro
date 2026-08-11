@@ -17,7 +17,8 @@ export async function getStaticPaths() {
   const yearGroups = new Map<string, PhotoDetail[]>()
   for (const photo of photos) {
     if (!photo.publishedAt) continue
-    const year = new Date(photo.publishedAt).getFullYear().toString()
+    // 一覧 (buildYearEvents) と同じ UTC 基準で数え、生成される年が実行環境のTZで揺れないようにする
+    const year = new Date(photo.publishedAt).getUTCFullYear().toString()
     if (!yearGroups.has(year)) yearGroups.set(year, [])
     yearGroups.get(year)!.push(photo)
   }

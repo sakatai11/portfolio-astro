@@ -69,7 +69,7 @@ const config = JSON.stringify({
          svg を自前で入れると Swiper 既定のアイコンは注入されない。
          .swiper-navigation-icon は prev 側で自動的に 180deg 回転する */
       <Fragment>
-        <div class="swiper-button-prev">
+        <button type="button" class="swiper-button-prev" aria-label="前の写真">
           <svg
             class="swiper-navigation-icon"
             viewBox="0 0 24 24"
@@ -83,8 +83,8 @@ const config = JSON.stringify({
               stroke-linecap="square"
             />
           </svg>
-        </div>
-        <div class="swiper-button-next">
+        </button>
+        <button type="button" class="swiper-button-next" aria-label="次の写真">
           <svg
             class="swiper-navigation-icon"
             viewBox="0 0 24 24"
@@ -98,7 +98,7 @@ const config = JSON.stringify({
               stroke-linecap="square"
             />
           </svg>
-        </div>
+        </button>
       </Fragment>
     )
   }
@@ -110,9 +110,14 @@ const config = JSON.stringify({
     --swiper-navigation-color: var(--color-accent);
   }
 
-  /* サイトのヘアライン基調に合わせ、ホバーでリンクと同じ色変化 (300ms) を与える */
+  /* サイトのヘアライン基調に合わせ、ホバーでリンクと同じ色変化 (300ms) を与える。
+     button 化に伴い、ブラウザ既定の外観が混ざらないよう明示的に消す */
   [data-swiper] .swiper-button-prev,
   [data-swiper] .swiper-button-next {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
     transition: color 300ms;
   }
 

@@ -6,13 +6,15 @@ import { ClientRouter } from 'astro:transitions'
 type Props = {
   title: string
   fullBleed?: boolean
+  /** 文書の主言語。本文は英語で統一しているため既定は `en` */
+  lang?: 'en' | 'ja'
 }
 
-const { title, fullBleed = false } = Astro.props
+const { title, fullBleed = false, lang = 'en' } = Astro.props
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Photography Portfolio" />
