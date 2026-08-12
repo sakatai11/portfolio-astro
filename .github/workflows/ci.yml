@@ -50,13 +50,15 @@ jobs:
       - name: Check MicroCMS secrets
         id: secrets
         env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
           MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
         run: |
-          if [ -n "$MICROCMS_API_KEY" ]; then
+          # createClient は両方を必須とするため、片方だけ登録されている場合もスキップする
+          if [ -n "$MICROCMS_SERVICE_DOMAIN" ] && [ -n "$MICROCMS_API_KEY" ]; then
             echo "available=true" >> "$GITHUB_OUTPUT"
           else
             echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::MICROCMS_API_KEY が未登録のためビルドをスキップしました"
+            echo "::warning::MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY が未登録のためビルドをスキップしました"
           fi
 
       - name: Build
