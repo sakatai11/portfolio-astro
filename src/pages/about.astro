@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import Header from '@/components/common/Header.astro'
 import Container from '@/components/common/Container.astro'
 import Footer from '@/components/common/Footer.astro'
+import aboutImg from '@/assets/about-img.jpg'
 ---
 
 <Layout
@@ -18,7 +19,7 @@ import Footer from '@/components/common/Footer.astro'
     <div class="mt-22 grid grid-cols-1 items-start gap-3 md:grid-cols-2 md:gap-20">
       <div class="profile-image top-32">
         <img
-          src="https://picsum.photos/seed/profile/600/800"
+          src={aboutImg.src}
           alt="Portrait of Taichi Sakai"
           class="w-full opacity-90 grayscale-[30%]"
         />
