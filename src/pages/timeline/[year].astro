@@ -6,6 +6,7 @@ import GridContainer from '@/components/common/GridContainer.astro'
 import PageTitle from '@/components/common/PageTitle.astro'
 import Grid from '@/components/photos/Grid.tsx'
 import { getMicroCmsAllList } from '@/services/microcms'
+import { buildOgImageUrl } from '@/utils'
 import type { PhotoDetail } from '@/types/index'
 
 export async function getStaticPaths() {
@@ -32,7 +33,11 @@ export async function getStaticPaths() {
 const { year, photos } = Astro.props
 ---
 
-<Layout title={`Timeline ${year} | Taichi Sakai`}>
+<Layout
+  title={`Timeline ${year} | Taichi Sakai`}
+  description={`Photographs taken in ${year} by Taichi Sakai.`}
+  ogImage={photos[0] && buildOgImageUrl(photos[0].main.url)}
+>
   <Header />
   <main class="w-full py-12">
     <PageTitle title={`${year}`} />

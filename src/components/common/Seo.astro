@@ -1,0 +1,46 @@
+---
+import { SITE_NAME, SITE_DESCRIPTION, SITE_OGP_IMAGE } from '@/constants/site'
+
+type Props = {
+  title: string
+  description?: string
+  /**
+   * OGP 画像。`/ogp.jpg` のような public 配下の相対パスと、
+   * MicroCMS などの絶対 URL の両方を受け付ける。
+   */
+  ogImage?: string
+  ogType?: 'website' | 'article'
+  /** 検索エンジンにインデックスさせないページ (404 など) で true にする */
+  noindex?: boolean
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  ogImage = SITE_OGP_IMAGE,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props
+
+// astro.config.mjs の site が設定されている前提。canonical / og:* は絶対 URL である必要がある
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+const ogImageUrl = new URL(ogImage, Astro.site)
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />

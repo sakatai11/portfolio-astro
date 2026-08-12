@@ -3,32 +3,64 @@ import '@/styles/global.css'
 
 import { ClientRouter } from 'astro:transitions'
 
+import Seo from '@/components/common/Seo.astro'
+import GoogleTagManager from '@/components/common/GoogleTagManager.astro'
+import GoogleTagManagerNoscript from '@/components/common/GoogleTagManagerNoscript.astro'
+
 type Props = {
   title: string
+  /** meta description / og:description。省略時はサイト共通の説明文 */
+  description?: string
+  /** OGP 画像。public 配下の相対パスと絶対 URL の両方を受け付ける */
+  ogImage?: string
+  ogType?: 'website' | 'article'
+  /** 検索エンジンにインデックスさせないページで true にする */
+  noindex?: boolean
   fullBleed?: boolean
   /** 文書の主言語。本文は英語で統一しているため既定は `en` */
   lang?: 'en' | 'ja'
 }
 
-const { title, fullBleed = false, lang = 'en' } = Astro.props
+const {
+  title,
+  description,
+  ogImage,
+  ogType,
+  noindex,
+  fullBleed = false,
+  lang = 'en',
+} = Astro.props
 ---
 
 <!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Photography Portfolio" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+
+    <Seo
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      ogType={ogType}
+      noindex={noindex}
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <GoogleTagManager />
+
     <ClientRouter />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <!-- pl-* はサイドバナー (Header.astro) の幅と対応させ、コンテンツが下に潜らないようにする。
        トップページ (fullBleed) はバナーをコンテンツに重ねるため付与しない。 -->
   <body class:list={[!fullBleed && 'pl-banner md:pl-banner-md']}>
+    <GoogleTagManagerNoscript />
     <slot />
   </body>
 </html>

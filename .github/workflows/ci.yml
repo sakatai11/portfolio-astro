@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+# 同じブランチへの連続 push では古い実行を打ち切る
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # astro check の型情報 (.astro/types.d.ts) を生成する
+      - run: npx astro sync
+
+      - run: npm run lint
+
+      # 型エラーは MicroCMS の認証情報なしで検出できるため、build とは独立して実行する
+      - run: npx astro check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # MicroCMS の認証情報はビルド時にのみ必要。
+      # リポジトリの Secrets 未登録でも CI 全体が落ちないようスキップ可能にしている
+      - name: Check MicroCMS secrets
+        id: secrets
+        env:
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          if [ -n "$MICROCMS_API_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::MICROCMS_API_KEY が未登録のためビルドをスキップしました"
+          fi
+
+      - name: Build
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          NODE_ENV: production
+        run: npm run build

@@ -1,0 +1,42 @@
+---
+/**
+ * Google Tag Manager の head 用スニペット。
+ * body 直後の noscript フォールバックは GoogleTagManagerNoscript.astro が担う。
+ */
+import { GTM_ID } from '@/constants/site'
+---
+
+<script is:inline define:vars={{ GTM_ID }}>
+  // GTM 公式スニペットと同等の処理 (var のみ lint 準拠に置き換え)
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+
+  const gtmScript = document.createElement('script')
+  gtmScript.async = true
+  gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID
+  document.head.appendChild(gtmScript)
+</script>
+
+<!--
+  ClientRouter による SPA 遷移では GTM 標準の Page View トリガーが発火しないため、
+  ページ交換完了後に pageview イベントを自前で送出する。
+  astro:page-load は DOM 差し替え後に発火するので document.title は遷移先の値になっている。
+-->
+<script>
+  declare global {
+    interface Window {
+      dataLayer: Record<string, unknown>[]
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({
+      event: 'pageview',
+      page: {
+        url: `${location.pathname}${location.search}`,
+        title: document.title,
+      },
+    })
+  })
+</script>

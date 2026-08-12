@@ -10,6 +10,7 @@ import type { PhotosMain, PhotoDetail } from '@/types/index'
 import Header from '@/components/common/Header.astro'
 import Footer from '@/components/common/Footer.astro'
 import ContentsGallery from '@/components/photos/ContentsGallery.astro'
+import { buildOgImageUrl } from '@/utils'
 
 export async function getStaticPaths() {
   // 全コンテンツ分の詳細ページを生成する必要があるため全件取得する
@@ -45,9 +46,22 @@ const relatedPhotos: PhotosMain[] = camera
       },
     })
   : []
+
+/**
+ * 撮影機材が登録されていればそれを説明文に含め、写真ごとに固有の description にする。
+ */
+const equipment = [...(photoDetail.camera ?? []), ...(photoDetail.film ?? [])]
+const description = equipment.length
+  ? `${photoDetail.title} — photographed by Taichi Sakai with ${equipment.join(', ')}.`
+  : `${photoDetail.title} — a photograph by Taichi Sakai.`
 ---
 
-<Layout title={`${photoDetail.title} | Taichi Sakai`}>
+<Layout
+  title={`${photoDetail.title} | Taichi Sakai`}
+  description={description}
+  ogImage={buildOgImageUrl(photoDetail.main.url)}
+  ogType="article"
+>
   <Header />
   <main class="w-full">
     <Detail photoDetail={photoDetail} />

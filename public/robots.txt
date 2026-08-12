@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.taichi-portfolio.com/sitemap-index.xml
