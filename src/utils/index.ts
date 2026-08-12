@@ -1,6 +1,15 @@
 import type { PhotosMain, YearEvent } from '@/types/index'
 
 /**
+ * MicroCMS の画像 URL を OGP 向け (1200x630) に変換する。
+ * MicroCMS の画像 API は imgix 互換のため、クエリでリサイズ・切り抜きを指定できる。
+ * @param url MicroCMS の画像 URL
+ * @returns OGP 用にリサイズされた画像 URL
+ */
+export const buildOgImageUrl = (url: string): string =>
+  `${url}?w=1200&h=630&fit=crop&fm=jpg`
+
+/**
  * 写真データから年別タイムラインイベントの配列を生成する。
  * コンテンツが存在する最新年を起点に displayYears 年分を表示する。
  * displayYears を省略した場合はコンテンツが存在する全年を表示する。

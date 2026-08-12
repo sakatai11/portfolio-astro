@@ -2,10 +2,10 @@
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/components/common/Header.astro'
 import Hero from '@/components/home/Hero.astro'
-
+import { SITE_TITLE } from '@/constants/site'
 ---
 
-<Layout title="Taichi Sakai | Photography Portfolio" fullBleed>
+<Layout title={SITE_TITLE} fullBleed>
   <Header />
   <Hero />
 </Layout>

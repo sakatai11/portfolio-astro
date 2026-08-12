@@ -18,7 +18,10 @@ const photos: PhotosMain[] = await getMicroCmsAllList<PhotosMain>({
 const events = buildYearEvents(photos)
 ---
 
-<Layout title="Timeline | Taichi Sakai">
+<Layout
+  title="Timeline | Taichi Sakai"
+  description="Browse the photography archive of Taichi Sakai by year."
+>
   <Header />
   <main class="w-full py-12">
     <PageTitle title="TIMELINE" />

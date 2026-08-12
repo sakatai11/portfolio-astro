@@ -1,0 +1,60 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/components/common/Header.astro'
+import Footer from '@/components/common/Footer.astro'
+import Container from '@/components/common/Container.astro'
+
+/**
+ * 静的ホスティングの 404 フォールバック。
+ * 存在しない写真 ID (旧サイトの /photo/:id など) からの流入もここで受ける。
+ */
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/photos', label: 'Photos' },
+  { href: '/timeline', label: 'Timeline' },
+]
+
+const linkClass = [
+  'relative inline-block border-b border-transparent text-sm transition-colors',
+  'after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left',
+  'after:scale-x-0 after:bg-black after:transition-transform after:duration-300 after:ease-out',
+  'hover:text-black hover:after:scale-x-100',
+].join(' ')
+---
+
+<Layout
+  title="Page Not Found | Taichi Sakai"
+  description="Page not found."
+  noindex
+>
+  <Header />
+  <main class="w-full py-12">
+    <Container>
+      <div class="flex flex-col items-center text-center">
+        <p
+          class="font-serif text-6xl tracking-[0.1em] text-[var(--color-accent)] md:text-7xl"
+        >
+          404
+        </p>
+        <h1
+          class="sans mt-6 font-sans text-2xl tracking-widest uppercase md:text-3xl"
+        >
+          Page Not Found
+        </h1>
+        <p class="mt-6 max-w-md text-sm text-[var(--color-accent)]">
+          The page you are looking for has been moved or no longer exists.
+        </p>
+        <nav class="mt-12 flex gap-8">
+          {
+            links.map(({ href, label }) => (
+              <a href={href} class={linkClass}>
+                {label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </Container>
+  </main>
+  <Footer />
+</Layout>
