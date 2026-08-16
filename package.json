@@ -2,6 +2,9 @@
   "name": "orbital-orbit",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && NODE_ENV=production astro build",

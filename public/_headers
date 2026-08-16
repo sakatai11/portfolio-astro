@@ -1,0 +1,12 @@
+# Cloudflare Pages のレスポンスヘッダ設定
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# ハッシュ付きのビルド成果物なので長期キャッシュして問題ない
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
