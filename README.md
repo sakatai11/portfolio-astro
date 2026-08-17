@@ -39,12 +39,24 @@ Cloudflare Pages の GitHub App の認可が失効すると、`main` へ push �
 2. 設定 → ビルド → Git リポジトリの「管理」から GitHub App を再認可する。
 3. 連携が切れている間の push は遡って発火しないため、復旧後に改めて push してデプロイする。
 
-連携が生きているかは GitHub 側からも確認できる。生きていれば push したコミットに
-Cloudflare Pages のデプロイが記録される。
+push したコミットがデプロイされたかは、`sha` で絞って確認できる。
 
 ```sh
-gh api repos/sakatai11/portfolio-astro/deployments   # 空の場合は連携が切れている
+gh api repos/sakatai11/portfolio-astro/deployments -X GET -f sha=<コミット SHA>
 ```
+
+このエンドポイントはリポジトリのデプロイ履歴を返すもので、現在の連携状態を返すわけではない
+（切断後も過去の履歴は残り、接続直後でまだデプロイがなければ空になる）。
+連携そのものの状態は 1. のダッシュボードの警告で判断する。
+
+### ビルドが失敗するとき
+
+`parameter is required (check serviceDomain and apiKey)` で落ちる場合は、
+MicroCMS の環境変数がその環境に登録されていない。
+
+`MICROCMS_SERVICE_DOMAIN` と `MICROCMS_API_KEY` は **Production と Preview の両方**に
+登録が必要。PR のプレビューデプロイは Preview 環境の変数を使うため、Production だけに
+登録していると本番は通ってプレビューだけ落ちる。
 
 ## 注意
 
