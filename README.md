@@ -27,6 +27,25 @@ npm run dev
 Cloudflare Pages（GitHub 連携）。`main` への push / PR のマージで自動デプロイされる。
 ビルドコマンドは `npm run build`、出力ディレクトリは `dist`。
 
+### デプロイが走らないとき
+
+Cloudflare Pages の GitHub App の認可が失効すると、`main` へ push してもビルドが
+トリガーされなくなる。GitHub Actions の CI は連携と無関係に成功するため気付きにくい。
+
+確認と復旧の手順:
+
+1. Cloudflare ダッシュボード → Workers & Pages → `portfolio-astro` を開く。
+   「このプロジェクトは Git アカウントから切断されています」の警告が出ていれば連携が切れている。
+2. 設定 → ビルド → Git リポジトリの「管理」から GitHub App を再認可する。
+3. 連携が切れている間の push は遡って発火しないため、復旧後に改めて push してデプロイする。
+
+連携が生きているかは GitHub 側からも確認できる。生きていれば push したコミットに
+Cloudflare Pages のデプロイが記録される。
+
+```sh
+gh api repos/sakatai11/portfolio-astro/deployments   # 空の場合は連携が切れている
+```
+
 ## 注意
 
 - 静的サイト生成のため、**MicroCMS を更新しても再ビルドしない限りサイトに反映されない**。
