@@ -39,15 +39,16 @@ Cloudflare Pages の GitHub App の認可が失効すると、`main` へ push �
 2. 設定 → ビルド → Git リポジトリの「管理」から GitHub App を再認可する。
 3. 連携が切れている間の push は遡って発火しないため、復旧後に改めて push してデプロイする。
 
-push したコミットがデプロイされたかは、`sha` で絞って確認できる。
+push したコミットで Cloudflare のビルドが動いたかは、コミットのチェックで確認できる。
+連携が切れている間は、このチェック自体が作成されない。
 
 ```sh
-gh api repos/sakatai11/portfolio-astro/deployments -X GET -f sha=<コミット SHA>
+gh api repos/sakatai11/portfolio-astro/commits/<コミット SHA>/check-runs \
+  --jq '.check_runs[] | select(.app.name == "Cloudflare Workers and Pages")'
 ```
 
-このエンドポイントはリポジトリのデプロイ履歴を返すもので、現在の連携状態を返すわけではない
-（切断後も過去の履歴は残り、接続直後でまだデプロイがなければ空になる）。
-連携そのものの状態は 1. のダッシュボードの警告で判断する。
+Cloudflare Pages は GitHub の Deployments API ではなくチェックで結果を報告するため、
+`gh api .../deployments` は常に空を返す。判定に使わないこと。
 
 ### ビルドが失敗するとき
 
