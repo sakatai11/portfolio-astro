@@ -12,16 +12,6 @@ cp .env.example .env   # MicroCMS の認証情報を記入する
 npm run dev
 ```
 
-## 環境変数
-
-| 変数名                    | 用途                                 |
-| :------------------------ | :----------------------------------- |
-| `MICROCMS_SERVICE_DOMAIN` | MicroCMS のサービスドメイン          |
-| `MICROCMS_API_KEY`        | MicroCMS の API キー（読み取り権限） |
-
-ビルド時にのみ使用され、クライアントのバンドルには含まれない。
-ホスティング側にも同じ変数を登録する。
-
 ## コマンド
 
 | Command           | Action                                  |
@@ -31,6 +21,11 @@ npm run dev
 | `npm run preview` | ビルド結果をローカルで確認              |
 | `npm run lint`    | ESLint                                  |
 | `npm run format`  | Prettier で整形                         |
+
+## デプロイ
+
+Cloudflare Pages（GitHub 連携）。`main` への push / PR のマージで自動デプロイされる。
+ビルドコマンドは `npm run build`、出力ディレクトリは `dist`。
 
 ## 注意
 
