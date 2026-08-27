@@ -1,0 +1,30 @@
+/**
+ * Cloudflare Workers (Static Assets) の設定。
+ * https://developers.cloudflare.com/workers/static-assets/
+ *
+ * Worker スクリプトを持たない静的アセット専用の構成のため `main` は指定しない。
+ * `name` はダッシュボード上の Worker 名と完全に一致している必要がある。
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio-astro",
+  "compatibility_date": "2026-08-27",
+
+  "assets": {
+    // Pages の pages_build_output_dir に相当する
+    "directory": "./dist",
+    // Pages は 404.html を自動検出していたが、Workers では明示指定が必要
+    "not_found_handling": "404-page",
+    // html_handling は既定の "auto-trailing-slash"。
+    // Astro の build.format: 'directory' (/about/index.html) と対応しており Pages と同じ挙動になる
+  },
+
+  // <name>.workers.dev での動作確認用
+  "workers_dev": true,
+  // 非本番ブランチのビルドにプレビュー URL を発行する (Pages のプレビューデプロイ相当)
+  "preview_urls": true,
+
+  "observability": {
+    "enabled": true,
+  },
+}
