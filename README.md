@@ -14,14 +14,14 @@ npm run dev
 
 ## コマンド
 
-| Command           | Action                                  |
-| :---------------- | :-------------------------------------- |
-| `npm run dev`     | 開発サーバーを `localhost:4321` で起動  |
-| `npm run build`   | 型チェック（`astro check`）＋本番ビルド |
-| `npm run preview` | ビルド結果をローカルで確認              |
-| `npm run cf:dev`  | Workers ランタイムで `dist` を配信      |
-| `npm run lint`    | ESLint                                  |
-| `npm run format`  | Prettier で整形                         |
+| Command           | Action                                                   |
+| :---------------- | :------------------------------------------------------- |
+| `npm run dev`     | 開発サーバーを `localhost:4321` で起動                   |
+| `npm run build`   | 型チェック（`astro check`）＋本番ビルド                  |
+| `npm run preview` | ビルド結果をローカルで確認                               |
+| `npm run cf:dev`  | Workers ランタイムで `dist` を配信（要 `npm run build`） |
+| `npm run lint`    | ESLint                                                   |
+| `npm run format`  | Prettier で整形                                          |
 
 ## デプロイ
 
