@@ -1,0 +1,98 @@
+name: Preview Deploy
+
+# Workers Builds は非本番ブランチのビルドにビルド変数を渡さないため、
+# MicroCMS を参照する astro build が失敗する。
+# プレビュー URL の発行はこのワークフローが担う。
+on:
+  pull_request:
+
+# 同じ PR への連続 push では古い実行を打ち切る
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Preview Deploy
+    # fork からの PR にはシークレットを渡さない
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      # Secrets 未登録でもワークフロー全体が落ちないようスキップ可能にしている
+      - name: Check secrets
+        id: secrets
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          missing=()
+          for name in MICROCMS_SERVICE_DOMAIN MICROCMS_API_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ ${#missing[@]} -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::${missing[*]} が未登録のためプレビューデプロイをスキップしました"
+          fi
+
+      - name: Build
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          NODE_ENV: production
+        run: npm run build
+
+      # デプロイせずにバージョンをアップロードする。preview_urls: true によりプレビュー URL が発行される
+      - name: Upload version
+        id: upload
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # tee で wrangler の終了コードを握り潰さないようにする
+          set -eo pipefail
+          npx wrangler versions upload | tee upload.log
+          # 出力例: Version Preview URL: https://<version-id>-portfolio-astro.<subdomain>.workers.dev
+          url=$(grep -oE 'Version Preview URL: \S+' upload.log | tail -1 | awk '{print $NF}' || true)
+          # 表記が変わった場合に備えて workers.dev の URL からも拾う
+          if [ -z "$url" ]; then
+            url=$(grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' upload.log | tail -1 || true)
+          fi
+          if [ -z "$url" ]; then
+            echo "::error::プレビュー URL を取得できませんでした"
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ steps.upload.outputs.url }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh pr comment "$PR" --edit-last --create-if-none --body \
+            "## プレビュー URL
+
+          | 項目 | 値 |
+          | :--- | :--- |
+          | URL | $URL |
+          | コミット | \`${SHA:0:7}\` |"
