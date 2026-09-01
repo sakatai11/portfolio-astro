@@ -1,12 +1,16 @@
 ---
 import type { PhotosMain } from '@/types/index'
 import Swiper from '@/components/ui/Swiper.astro'
+import { buildImageUrl, buildSrcSet } from '@/utils'
 
 type Props = {
   photos: PhotosMain[]
 }
 
 const { photos } = Astro.props
+
+// SP は slidesPerView 1.4、md は 3 カラム。ファーストビュー外なので優先読み込みは不要
+const SIZES = '(min-width: 768px) 25vw, 71vw'
 ---
 
 <!-- section: body が flex コンテナのため、mx-auto だけでは幅が内容に縮む。w-full で全幅を確保する -->
@@ -37,9 +41,18 @@ const { photos } = Astro.props
               <div class="overflow-hidden">
                 <a href={`/photos/${id}`} class="group block">
                   <picture>
-                    <source srcset={`${main.url}?fm=webp`} type="image/webp" />
+                    <source
+                      srcset={buildSrcSet(main.url, 'avif')}
+                      sizes={SIZES}
+                      type="image/avif"
+                    />
+                    <source
+                      srcset={buildSrcSet(main.url, 'webp')}
+                      sizes={SIZES}
+                      type="image/webp"
+                    />
                     <img
-                      src={main.url}
+                      src={buildImageUrl(main.url)}
                       alt={title}
                       width={main.width}
                       height={main.height}
