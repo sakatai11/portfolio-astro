@@ -9,6 +9,28 @@ import type { PhotosMain, YearEvent } from '@/types/index'
 export const buildOgImageUrl = (url: string): string =>
   `${url}?w=1200&h=630&fit=crop&fm=jpg`
 
+/** srcset に並べる幅の候補 */
+const IMAGE_WIDTHS = [400, 600, 900, 1200] as const
+
+/**
+ * MicroCMS(imgix) の画像 URL から srcset 文字列を生成する。
+ * 表示枠に対して過大な原寸画像が配信されないよう、複数幅の候補を並べる。
+ * @param url MicroCMS の画像 URL
+ * @param fm 配信する画像フォーマット
+ * @returns `<img srcset>` / `<source srcset>` に渡す文字列
+ */
+export const buildSrcSet = (url: string, fm: 'avif' | 'webp'): string =>
+  IMAGE_WIDTHS.map((w) => `${url}?fm=${fm}&w=${w}&q=75 ${w}w`).join(', ')
+
+/**
+ * srcset 非対応環境向けのフォールバック URL を生成する。
+ * @param url MicroCMS の画像 URL
+ * @param w 画像の幅（省略時は 900）
+ * @returns リサイズ済みの JPEG URL
+ */
+export const buildImageUrl = (url: string, w = 900): string =>
+  `${url}?fm=jpg&w=${w}&q=75`
+
 /**
  * 写真データから年別タイムラインイベントの配列を生成する。
  * コンテンツが存在する最新年を起点に displayYears 年分を表示する。
