@@ -32,7 +32,7 @@ const totalPages = Math.ceil(totalCount / PHOTOS_PER_PAGE)
     <PageTitle title="PHOTOS" />
     <GridContainer>
       <PhotoLoadMoreGrid
-        client:idle
+        client:load
         initialPhotos={photos}
         totalPages={totalPages}
       />
