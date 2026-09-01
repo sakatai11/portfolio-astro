@@ -40,6 +40,16 @@ export type PhotoGalleryProps = {
   images: PhotoInfo[]
 }
 
+export type GridProps = {
+  photos: PhotosMain[]
+  /**
+   * 先頭から何枚を優先読み込み (loading=eager / fetchpriority=high) にするか。
+   * ファーストビューに入る枚数だけ指定する。`LoadMoreList` で追記される
+   * ページは index がこの値を超えるため、自然に対象外になる。
+   */
+  priorityCount?: number
+}
+
 /** ページ分割された静的 JSON エンドポイントのレスポンス */
 export type PaginatedResponse<T> = {
   items: T[]
