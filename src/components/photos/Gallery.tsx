@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { PhotoGalleryProps } from '@/types/index'
-import { isPortrait32 } from '@/utils'
+import { buildImageUrl, buildSrcSet, isPortrait32 } from '@/utils'
 import Modal from './Modal'
+
+// md 以上は 3 カラム。縦長 2:3 は 70% 幅に絞られるため sizes を分ける
+const SIZES_LANDSCAPE = '(min-width: 768px) 25vw, 100vw'
+const SIZES_PORTRAIT = '(min-width: 768px) 17vw, 100vw'
+
+// ファーストビューに入る先頭数枚は優先読み込みにする
+const PRIORITY_COUNT = 3
 
 export default function PhotoGallery({ images }: PhotoGalleryProps) {
   // 現在モーダルで表示している画像のインデックス。未選択時は undefined
@@ -49,29 +56,44 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
 
   return (
     <>
-      <ul className="grid grid-cols-1 pl-4 mt-6 md:pl-0 md:grid-cols-3 md:mt-0">
-        {images.map(({ url, width, height }, index) => (
-          <li key={url} className="pt-3 md:p-[4.2vw]">
-            <button
-              type="button"
-              className="group h-full w-full cursor-zoom-in overflow-hidden"
-              onClick={() => setSelectedIndex(index)}
-            >
-              <picture className="flex h-full w-full items-center justify-center">
-                <source srcSet={`${url}?fm=webp`} type="image/webp" />
-                <img
-                  src={url}
-                  alt={`image${index + 1}`}
-                  width={width}
-                  height={height}
-                  className={`${isPortrait32(width, height) ? 'aspect-[2/3] md:w-[70%] w-full' : 'aspect-[3/2] w-full'} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </picture>
-            </button>
-          </li>
-        ))}
+      <ul className="mt-6 grid grid-cols-1 pl-4 md:mt-0 md:grid-cols-3 md:pl-0">
+        {images.map(({ url, width, height }, index) => {
+          const portrait = isPortrait32(width, height)
+          // ファーストビューの数枚は lazy を外し、LCP を早める
+          const isPriority = index < PRIORITY_COUNT
+          return (
+            <li key={url} className="pt-3 md:p-[4.2vw]">
+              <button
+                type="button"
+                className="group h-full w-full cursor-zoom-in overflow-hidden"
+                onClick={() => setSelectedIndex(index)}
+              >
+                <picture className="flex h-full w-full items-center justify-center">
+                  <source
+                    srcSet={buildSrcSet(url, 'avif')}
+                    sizes={portrait ? SIZES_PORTRAIT : SIZES_LANDSCAPE}
+                    type="image/avif"
+                  />
+                  <source
+                    srcSet={buildSrcSet(url, 'webp')}
+                    sizes={portrait ? SIZES_PORTRAIT : SIZES_LANDSCAPE}
+                    type="image/webp"
+                  />
+                  <img
+                    src={buildImageUrl(url)}
+                    alt={`image${index + 1}`}
+                    width={width}
+                    height={height}
+                    className={`${portrait ? 'aspect-[2/3] w-full md:w-[70%]' : 'aspect-[3/2] w-full'} object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-80`}
+                    loading={isPriority ? 'eager' : 'lazy'}
+                    fetchPriority={isPriority ? 'high' : 'auto'}
+                    decoding="async"
+                  />
+                </picture>
+              </button>
+            </li>
+          )
+        })}
       </ul>
 
       {selectedIndex !== undefined && (
