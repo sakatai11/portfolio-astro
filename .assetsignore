@@ -1,0 +1,3 @@
+# Workers にアップロードしないファイル
+# https://developers.cloudflare.com/workers/static-assets/
+**/.DS_Store
