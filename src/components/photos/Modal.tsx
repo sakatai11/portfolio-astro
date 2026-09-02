@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { PhotoModalProps } from '@/types/index'
+import { MODAL_IMAGE_SIZES, buildModalSrcSet } from '@/utils'
 
 export default function PhotoModal({
   images,
@@ -87,13 +88,23 @@ export default function PhotoModal({
         </button>
 
         {/* Image */}
+        {/* モーダル最大表示幅は 1125px。DPR 2 の端末でも劣化しないよう
+            グリッド (q=75) より高い q=80 で、2250px までの srcset を配信する */}
         <picture className="flex max-w-[900px] items-center justify-center min-[1475px]:max-w-[1125px]">
-          <source srcSet={`${image.url}?fm=webp`} type="image/webp" />
+          <source
+            srcSet={buildModalSrcSet(image.url, 'webp')}
+            sizes={MODAL_IMAGE_SIZES}
+            type="image/webp"
+          />
           <img
-            src={image.url}
+            src={`${image.url}?fm=jpg&w=1600&q=80`}
+            srcSet={buildModalSrcSet(image.url, 'jpg')}
+            sizes={MODAL_IMAGE_SIZES}
             alt={`image${currentIndex + 1}`}
             width={image.width}
             height={image.height}
+            loading="lazy"
+            decoding="async"
             className="max-h-[calc(100vh-40px)] object-contain"
           />
         </picture>

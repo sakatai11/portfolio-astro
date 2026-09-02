@@ -32,6 +32,26 @@ export const buildImageUrl = (url: string, w = 900): string =>
   `${url}?fm=jpg&w=${w}&q=75`
 
 /**
+ * モーダル拡大表示用の srcset 幅候補。
+ * 最大表示幅は 1125px。DPR 2 の端末でも劣化しないよう 2 倍の 2250px までカバーする。
+ */
+const MODAL_IMAGE_WIDTHS = [900, 1125, 1600, 2250] as const
+
+/**
+ * モーダル拡大表示用の srcset 文字列を生成する。
+ * グリッド (q=75) より高い q=80 で配信し、DPR に応じて適切な幅が選ばれるよう
+ * 最大表示幅 1125px の 2 倍まで候補を並べる。
+ * @param url MicroCMS の画像 URL
+ * @param fm 配信する画像フォーマット
+ * @returns `<source srcset>` / `<img srcset>` に渡す文字列
+ */
+export const buildModalSrcSet = (url: string, fm: 'webp' | 'jpg'): string =>
+  MODAL_IMAGE_WIDTHS.map((w) => `${url}?fm=${fm}&w=${w}&q=80 ${w}w`).join(', ')
+
+/** モーダル画像の表示幅。1475px 以上で 1125px、それ未満で 900px 上限 */
+export const MODAL_IMAGE_SIZES = '(min-width: 1475px) 1125px, 900px'
+
+/**
  * 写真データから年別タイムラインイベントの配列を生成する。
  * コンテンツが存在する最新年を起点に displayYears 年分を表示する。
  * displayYears を省略した場合はコンテンツが存在する全年を表示する。

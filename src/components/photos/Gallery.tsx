@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import type { PhotoGalleryProps } from '@/types/index'
 import { buildImageUrl, buildSrcSet, isPortrait32 } from '@/utils'
-import Modal from './Modal'
+
+// framer-motion 一式を含むため、モーダルを開くまで初期バンドルに含めない
+const Modal = lazy(() => import('./Modal'))
 
 // md 以上は 3 カラム。縦長 2:3 は 70% 幅に絞られるため sizes を分ける
 const SIZES_LANDSCAPE = '(min-width: 768px) 25vw, 100vw'
@@ -97,13 +99,15 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
       </ul>
 
       {selectedIndex !== undefined && (
-        <Modal
-          images={images}
-          currentIndex={selectedIndex}
-          onClose={handleClose}
-          onPrev={handlePrev}
-          onNext={handleNext}
-        />
+        <Suspense fallback={null}>
+          <Modal
+            images={images}
+            currentIndex={selectedIndex}
+            onClose={handleClose}
+            onPrev={handlePrev}
+            onNext={handleNext}
+          />
+        </Suspense>
       )}
     </>
   )
