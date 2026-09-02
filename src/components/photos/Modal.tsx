@@ -15,14 +15,17 @@ export default function PhotoModal({
 
   // 前後の画像を先読みし、ナビゲーション時に即座に表示できるようにする。
   // React 19 が <link> を <head> へ巻き上げ・重複排除する。currentIndex が
-  // 変わると古い <link> はアンマウントされ、新しい隣接分がマウントされる
-  const neighborIndexes =
+  // 変わると古い <link> はアンマウントされ、新しい隣接分がマウントされる。
+  // 画像が 2 枚のときは前後が同一 index になるため Set で重複を除く
+  const neighborUrls =
     images.length < 2
       ? []
       : [
-          (currentIndex + 1) % images.length,
-          (currentIndex - 1 + images.length) % images.length,
-        ]
+          ...new Set([
+            (currentIndex + 1) % images.length,
+            (currentIndex - 1 + images.length) % images.length,
+          ]),
+        ].map((i) => images[i].url)
 
   // モーダルが開いている間、背景のスクロールを無効化。アンマウント時に復元
   useEffect(() => {
@@ -98,14 +101,16 @@ export default function PhotoModal({
           </svg>
         </button>
 
-        {/* 前後の画像を先読み */}
-        {neighborIndexes.map((i) => (
+        {/* 前後の画像を先読み。<picture> の webp <source> と揃えるため
+            webp で統一し、非対応ブラウザが不要な取得をしないよう type を明示する */}
+        {neighborUrls.map((url) => (
           <link
-            key={images[i].url}
+            key={url}
             rel="preload"
             as="image"
-            href={`${images[i].url}?fm=jpg&w=1600&q=80`}
-            imageSrcSet={buildModalSrcSet(images[i].url, 'webp')}
+            type="image/webp"
+            href={`${url}?fm=webp&w=1600&q=80`}
+            imageSrcSet={buildModalSrcSet(url, 'webp')}
             imageSizes={MODAL_IMAGE_SIZES}
           />
         ))}
