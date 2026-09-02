@@ -87,10 +87,15 @@ export default function PhotoModal({
         </button>
 
         {/* Image */}
+        {/* モーダル最大表示幅は 1125px。DPR 2 の環境でも劣化が見えないよう
+            グリッド (q=75) より高い q=80 で w=1600 を配信する */}
         <picture className="flex max-w-[900px] items-center justify-center min-[1475px]:max-w-[1125px]">
-          <source srcSet={`${image.url}?fm=webp`} type="image/webp" />
+          <source
+            srcSet={`${image.url}?fm=webp&w=1600&q=80`}
+            type="image/webp"
+          />
           <img
-            src={image.url}
+            src={`${image.url}?fm=jpg&w=1600&q=80`}
             alt={`image${currentIndex + 1}`}
             width={image.width}
             height={image.height}
