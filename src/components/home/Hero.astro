@@ -3,9 +3,18 @@ import { getImage } from 'astro:assets'
 import fvPc from '@/assets/fv-pc.jpg'
 import fvSp from '@/assets/fv-sp.jpg'
 
-const optimizedPc = await getImage({ src: fvPc, format: 'webp' })
-const optimizedSp = await getImage({ src: fvSp, format: 'webp' })
-
+const optimizedPc = await getImage({
+  src: fvPc,
+  format: 'webp',
+  widths: [1024, 1440, 1920],
+  sizes: '100vw',
+})
+const optimizedSp = await getImage({
+  src: fvSp,
+  format: 'webp',
+  widths: [412, 640, 828],
+  sizes: '100vw',
+})
 ---
 
 <section
@@ -14,19 +23,32 @@ const optimizedSp = await getImage({ src: fvSp, format: 'webp' })
 >
   <div id="hero-bg" class="absolute inset-0 z-0">
     <picture class="h-full w-full">
-      <source media="(min-width: 768px)" srcset={optimizedPc.src} type="image/webp" />
-      <source srcset={optimizedSp.src} type="image/webp" />
+      <source
+        media="(min-width: 768px)"
+        srcset={optimizedPc.srcSet.attribute}
+        sizes="100vw"
+        type="image/webp"
+      />
+      <source
+        srcset={optimizedSp.srcSet.attribute}
+        sizes="100vw"
+        type="image/webp"
+      />
       <img
         src={fvSp.src}
         alt="Background"
         class="animate-img-reveal h-full w-full object-cover"
         loading="eager"
         decoding="async"
+        fetchpriority="high"
       />
     </picture>
     <div class="absolute inset-0"></div>
   </div>
 
   <!-- 初期表示のオーバーレイ -->
-  <div class="animate-overlay-fade pointer-events-none absolute inset-0 z-20 bg-white"></div>
+  <div
+    class="animate-overlay-fade pointer-events-none absolute inset-0 z-20 bg-white"
+  >
+  </div>
 </section>
