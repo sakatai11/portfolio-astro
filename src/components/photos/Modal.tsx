@@ -13,6 +13,17 @@ export default function PhotoModal({
 }: PhotoModalProps) {
   const image = images[currentIndex]
 
+  // 前後の画像を先読みし、ナビゲーション時に即座に表示できるようにする。
+  // React 19 が <link> を <head> へ巻き上げ・重複排除する。currentIndex が
+  // 変わると古い <link> はアンマウントされ、新しい隣接分がマウントされる
+  const neighborIndexes =
+    images.length < 2
+      ? []
+      : [
+          (currentIndex + 1) % images.length,
+          (currentIndex - 1 + images.length) % images.length,
+        ]
+
   // モーダルが開いている間、背景のスクロールを無効化。アンマウント時に復元
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -87,6 +98,18 @@ export default function PhotoModal({
           </svg>
         </button>
 
+        {/* 前後の画像を先読み */}
+        {neighborIndexes.map((i) => (
+          <link
+            key={images[i].url}
+            rel="preload"
+            as="image"
+            href={`${images[i].url}?fm=jpg&w=1600&q=80`}
+            imageSrcSet={buildModalSrcSet(images[i].url, 'webp')}
+            imageSizes={MODAL_IMAGE_SIZES}
+          />
+        ))}
+
         {/* Image */}
         {/* モーダル最大表示幅は 1125px。DPR 2 の端末でも劣化しないよう
             グリッド (q=75) より高い q=80 で、2250px までの srcset を配信する */}
@@ -103,7 +126,8 @@ export default function PhotoModal({
             alt={`image${currentIndex + 1}`}
             width={image.width}
             height={image.height}
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
             decoding="async"
             className="max-h-[calc(100vh-40px)] object-contain"
           />
