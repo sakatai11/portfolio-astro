@@ -39,6 +39,10 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- 写真画像は images.microcms-assets.io（サイト本体とは別オリジン）から配信される。
+         img に crossorigin 属性は付けていないため、preconnect も crossorigin なしで揃える。 -->
+    <link rel="preconnect" href="https://images.microcms-assets.io" />
+
     <Seo
       title={title}
       description={description}
