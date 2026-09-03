@@ -1,0 +1,118 @@
+name: Preview Deploy
+
+# Workers Builds は非本番ブランチのビルドにビルド変数を渡さないため、
+# Cloudflare 側の「Builds for non-production branches」は無効にしている。
+# プレビュー URL の発行はこのワークフローが担う。
+on:
+  pull_request:
+    # Workers Builds は push 単位で動くため PR の向き先を判別できない。
+    # 「main 向けの PR でだけプレビューを作る」制御はここでのみ表現できる
+    # （develop 向けの feature PR ではプレビューを発行しない）
+    branches: [main]
+
+# 同じ PR への連続 push では古い実行を打ち切る
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Preview Deploy
+    # fork からの PR にはシークレットを渡さない
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      # Secrets 未登録でもワークフロー全体が落ちないようスキップ可能にしている
+      - name: Check secrets
+        id: secrets
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          missing=()
+          for name in MICROCMS_SERVICE_DOMAIN MICROCMS_API_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ ${#missing[@]} -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::${missing[*]} が未登録のためプレビューデプロイをスキップしました"
+          fi
+
+      - name: Build
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          NODE_ENV: production
+        run: npm run build
+
+      # デプロイせずにバージョンをアップロードする。preview_urls: true によりプレビュー URL が発行される。
+      # --preview-alias で PR ごとに固定の URL (pr-<番号>-portfolio-astro...) も割り当てる
+      - name: Upload version
+        id: upload
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          # tee で wrangler の終了コードを握り潰さないようにする
+          set -eo pipefail
+          npx wrangler versions upload --preview-alias "pr-$PR" | tee upload.log
+
+          # 出力例:
+          #   Version Preview URL: https://<version-id>-portfolio-astro.<subdomain>.workers.dev
+          #   Version Preview Alias URL: https://pr-24-portfolio-astro.<subdomain>.workers.dev
+          extract() {
+            grep -oE "$1: \S+" upload.log | tail -1 | awk '{print $NF}' || true
+          }
+          alias_url=$(extract 'Version Preview Alias URL')
+          version_url=$(extract 'Version Preview URL')
+
+          # 表記が変わった場合に備えて workers.dev の URL からも拾う
+          if [ -z "$version_url" ]; then
+            version_url=$(grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' upload.log | tail -1 || true)
+          fi
+          if [ -z "$alias_url" ] && [ -z "$version_url" ]; then
+            echo "::error::プレビュー URL を取得できませんでした"
+            exit 1
+          fi
+          {
+            echo "alias_url=$alias_url"
+            echo "version_url=$version_url"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL
+        if: steps.secrets.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALIAS_URL: ${{ steps.upload.outputs.alias_url }}
+          VERSION_URL: ${{ steps.upload.outputs.version_url }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh pr comment "$PR" --edit-last --create-if-none --body \
+            "## プレビュー URL
+
+          | 種類 | URL |
+          | :--- | :--- |
+          | この PR 固定 | $ALIAS_URL |
+          | このコミット固有 | $VERSION_URL |
+
+          コミット: \`${SHA:0:7}\`"
