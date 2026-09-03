@@ -21,7 +21,11 @@
 
   // <name>.workers.dev での動作確認用
   "workers_dev": true,
-  // 非本番ブランチのビルドにプレビュー URL を発行する (Pages のプレビューデプロイ相当)
+  // バージョンごとにプレビュー URL を発行する。
+  // 既定値は workers_dev と同じ (true) だが、下記の依存関係を明示するため書いている。
+  // 非本番ブランチの Workers Builds は Cloudflare 側で無効化しているため、
+  // 実際に発行しているのは .github/workflows/preview.yml の `wrangler versions upload`
+  // (main 向け PR ごとに pr-<番号> のエイリアス URL を割り当てる)
   "preview_urls": true,
 
   "observability": {
