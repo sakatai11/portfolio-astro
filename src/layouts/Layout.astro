@@ -19,6 +19,13 @@ type Props = {
   fullBleed?: boolean
   /** 文書の主言語。本文は英語で統一しているため既定は `en` */
   lang?: 'en' | 'ja'
+  /**
+   * 写真画像 (images.microcms-assets.io / サイト本体とは別オリジン) を表示する
+   * ページで true にする。画像を持たない `/`・`/about`・`/404` で preconnect すると、
+   * 使われない接続の確立コストだけが乗るため既定は無効。
+   * img に crossorigin 属性は付けていないため、preconnect も crossorigin なしで揃える。
+   */
+  preconnectMicrocms?: boolean
 }
 
 const {
@@ -29,6 +36,7 @@ const {
   noindex,
   fullBleed = false,
   lang = 'en',
+  preconnectMicrocms = false,
 } = Astro.props
 ---
 
@@ -39,9 +47,11 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- 写真画像は images.microcms-assets.io（サイト本体とは別オリジン）から配信される。
-         img に crossorigin 属性は付けていないため、preconnect も crossorigin なしで揃える。 -->
-    <link rel="preconnect" href="https://images.microcms-assets.io" />
+    {
+      preconnectMicrocms && (
+        <link rel="preconnect" href="https://images.microcms-assets.io" />
+      )
+    }
 
     <Seo
       title={title}

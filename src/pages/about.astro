@@ -3,7 +3,24 @@ import Layout from '@/layouts/Layout.astro'
 import Header from '@/components/common/Header.astro'
 import Container from '@/components/common/Container.astro'
 import Footer from '@/components/common/Footer.astro'
+import { Picture } from 'astro:assets'
 import aboutImg from '@/assets/about-img.jpg'
+
+/**
+ * プロフィール画像の実表示幅。sizes はレイアウトから逆算している。
+ * - md 未満: 1 カラム。100vw - サイドバナー (3rem) - Container の px-4 (2rem)
+ * - md 以上: 2 カラム。(Container 幅 - px-[5.5rem] (11rem) - gap-20 (5rem)) / 2
+ *   Container 幅は min(100vw - サイドバナー 3.5rem, 1600px) なので、
+ *   1656px 未満では 50vw - 9.75rem、それ以上は 672px で頭打ちになる。
+ *
+ * widths の上限を 1000 に抑えているのは、最大表示幅 672px に対して 1.5 倍あれば
+ * 高 DPR でも十分にシャープで、1360w (webp 495kB) は割に合わないため。
+ */
+const ABOUT_IMAGE_SIZES = [
+  '(min-width: 1656px) 672px',
+  '(min-width: 768px) calc(50vw - 9.75rem)',
+  'calc(100vw - 5rem)',
+].join(', ')
 ---
 
 <Layout
@@ -18,10 +35,18 @@ import aboutImg from '@/assets/about-img.jpg'
 
     <div class="mt-22 grid grid-cols-1 items-start gap-3 md:grid-cols-2 md:gap-20">
       <div class="profile-image top-32">
-        <img
-          src={aboutImg.src}
+        <!-- ページの LCP 要素。eager + fetchpriority で発見と取得を最優先する -->
+        <Picture
+          src={aboutImg}
+          formats={['webp']}
+          widths={[340, 680, 1000]}
+          quality={70}
+          sizes={ABOUT_IMAGE_SIZES}
           alt="Portrait of Taichi Sakai"
           class="w-full opacity-90 grayscale-[30%]"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
         />
       </div>
       <div class="bio pt-8">
