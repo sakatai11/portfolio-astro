@@ -1,0 +1,147 @@
+name: Fallback Deploy
+
+# Workers Builds が本番ビルドをスキップしたときだけ、デプロイを代行する。
+#
+# main へのマージコミットのツリーが feature ブランチ HEAD と一致すると、Workers Builds が
+# 「ビルド済み」と判断して起動せず、check-run すら作られない (#40)。GitHub Actions だけが
+# 緑になるため、マージした本人がデプロイされていないことに気づけないのが問題だった。
+#
+# Workers Builds は主系のまま。正常に起動した場合このワークフローは何もしないので、
+# 二重デプロイにはならない。
+
+on:
+  push:
+    branches: [main]
+    # Cloudflare 側の監視パス (Build watch paths) と同じ範囲を指定する。
+    # Cloudflare のワイルドカードはパス区切り (/) を含むため `src/*` でネストしたファイルに
+    # マッチするが、GitHub Actions の `*` は含まないため `src/**` と書く必要がある。
+    # ここを `src/*` にすると src/pages/*.astro の変更で起動せず、代行が機能しない。
+    #
+    # `.github/**` を含めないのは意図的。監視パスに含まれない変更では Workers Builds が
+    # 正常にスキップするため、それを異常と誤判定して不要なデプロイを走らせないようにする。
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - 'wrangler.jsonc'
+      - '.node-version'
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Workers Builds の有無にかかわらずデプロイする (デプロイ経路の疎通確認用)'
+        type: boolean
+        default: false
+
+# 連続 push では古い実行を打ち切る。新しいコミットのデプロイが古い分を包含する
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: Detect Workers Builds
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      # Workers Builds は起動時に check-run を作る。#38 の実測では push から 120 秒後には
+      # completed になっていたため、30 秒 × 10 回 (最大 5 分) は十分な安全マージン
+      - name: Wait for Workers Builds
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          FORCE: ${{ inputs.force_deploy }}
+        run: |
+          found=0
+          for i in $(seq 1 10); do
+            # API の一時的な失敗でワークフローを落とさない (次の反復で拾い直す)
+            found=$(gh api "repos/$REPO/commits/$SHA/check-runs" \
+              --jq '[.check_runs[] | select(.app.name == "Cloudflare Workers and Pages")] | length' \
+              2>/dev/null || echo 0)
+            # `[ 条件 ] && コマンド` は条件が false のときリスト全体が非ゼロ終了になり、
+            # GitHub Actions の既定シェル (bash -e) ではステップが落ちる。
+            # 代行が必要な found=0 のときにこそ落ちるため、if 文で書く
+            if [ "${found:-0}" -gt 0 ]; then break; fi
+            if [ "$i" -lt 10 ]; then sleep 30; fi
+          done
+
+          if [ "$FORCE" = "true" ]; then
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "force_deploy が指定されたため、Workers Builds の有無にかかわらずデプロイします" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${found:-0}" -gt 0 ]; then
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "Workers Builds が起動しているため、デプロイは代行しません" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Workers Builds が起動しませんでした。このワークフローがデプロイを代行します (#40)"
+          fi
+
+  deploy:
+    name: Deploy
+    needs: detect
+    if: needs.detect.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      # ci.yml / preview.yml は Secrets 未登録でもスキップして続行するが、こちらは
+      # 「Workers Builds が動かなかった」状況の最後の砦のため、静かに素通りさせず失敗させる
+      - name: Check secrets
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          missing=()
+          for name in MICROCMS_SERVICE_DOMAIN MICROCMS_API_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "::error::${missing[*]} が未登録のため本番デプロイを代行できません。main に空コミットを push して Workers Builds を起こしてください"
+            exit 1
+          fi
+
+      - name: Build
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          NODE_ENV: production
+        run: npm run build
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
+
+      - name: Summary
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          # 実行理由 (Workers Builds 不在 / force_deploy) は detect ジョブの
+          # サマリーと警告に出ているため、ここでは重複させず結果だけ残す
+          {
+            echo "## 本番デプロイを実行しました"
+            echo
+            echo "このワークフローが \`wrangler deploy\` を実行しました。"
+            echo
+            echo "- コミット: \`${SHA:0:7}\`"
+            echo "- 詳細: #40"
+          } >> "$GITHUB_STEP_SUMMARY"
