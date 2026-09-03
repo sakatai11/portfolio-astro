@@ -37,6 +37,7 @@ const { year, photos } = Astro.props
   title={`Timeline ${year} | Taichi Sakai`}
   description={`Photographs taken in ${year} by Taichi Sakai.`}
   ogImage={photos[0] && buildOgImageUrl(photos[0].main.url)}
+  preconnectMicrocms
 >
   <Header />
   <main class="w-full py-12">
