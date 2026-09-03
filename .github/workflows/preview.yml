@@ -1,8 +1,15 @@
 name: Preview Deploy
 
-# Workers Builds は非本番ブランチのビルドにビルド変数を渡さないため、
-# Cloudflare 側の「Builds for non-production branches」は無効にしている。
+# Cloudflare 側の「Builds for non-production branches」は無効にしているため、
 # プレビュー URL の発行はこのワークフローが担う。
+#
+# 無効化の経緯:
+# - 当初は「Workers Builds が非本番ブランチにビルド変数を渡さない」ことが理由だったが、
+#   2026-09-03 の PR #35 で非本番ブランチのビルドが成功しており、この症状は再現しない
+# - 現在の理由は、main へのマージコミットのツリーが feature ブランチ HEAD と一致すると
+#   Workers Builds が本番ビルドをスキップする事象への対策（非本番ブランチをビルドしなければ
+#   feature HEAD のツリーが「ビルド済み」にならない、という狙い）
+# - ただしこの対策は効かず PR #38 で再発した。原因と代替案は #40 を参照
 on:
   pull_request:
     # Workers Builds は push 単位で動くため PR の向き先を判別できない。
