@@ -48,6 +48,11 @@ const fallbackSp = await getImage({
         sizes="100vw"
         type="image/webp"
       />
+      <!--
+        ファーストビュー全面の背景画像。遅延読み込みが基本方針の画像要素の中で、
+        ここだけ loading="eager" + fetchpriority="high" にしている例外 (#20)。
+        画面上端に表示されるため lazy にすると初期表示が遅れる。
+      -->
       <img
         src={fallbackSp.src}
         alt="Background"
