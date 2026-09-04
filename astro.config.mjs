@@ -16,6 +16,21 @@ export default defineConfig({
 
   integrations: [react(), sitemap()],
 
+  build: {
+    /**
+     * 全ページ共通 CSS を HTML の <style> にインライン化し、CSS リクエストを 1 本削減する (#39)。
+     *
+     * トップページの LCP 要素は Header のテキストで、#39 では外部 CSS の取得完了が
+     * そのまま LCP を決めている (削減余地 567 ms) とされていた。ただし本番実測
+     * (Slow 4G / CPU 4x / コールドキャッシュ) では、CSS は zstd + h2 多重化 +
+     * immutable キャッシュにより HTML パース後 8 ms で取得完了しており、
+     * レンダーブロッキングの推定削減量は LCP / FCP とも 0 ms だった。
+     * よって LCP 短縮効果はほぼなく、狙いは追加ラウンドトリップの排除に留まる。
+     * HTML は Cloudflare が zstd 圧縮するため実転送増も小さい。
+     */
+    inlineStylesheets: 'always',
+  },
+
   /**
    * 旧サイト (portfolio-react) の URL 構造からの移行用リダイレクト。
    * 静的ビルドのため meta refresh + canonical を持つ HTML が生成される

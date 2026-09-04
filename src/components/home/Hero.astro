@@ -6,14 +6,28 @@ import fvSp from '@/assets/fv-sp.jpg'
 const optimizedPc = await getImage({
   src: fvPc,
   format: 'webp',
+  quality: 70,
   widths: [1024, 1440, 1920],
   sizes: '100vw',
 })
 const optimizedSp = await getImage({
   src: fvSp,
   format: 'webp',
+  quality: 70,
   widths: [412, 640, 828],
   sizes: '100vw',
+})
+
+/**
+ * webp 非対応ブラウザ向けのフォールバック。元 JPEG (549 kB) を直接指すと
+ * ビルド成果物に未最適化ファイルが残るため、最適化パイプラインを通した
+ * jpeg を src に渡す (#39)。SP カットの最大表示幅に合わせて 828w に抑える。
+ */
+const fallbackSp = await getImage({
+  src: fvSp,
+  format: 'jpeg',
+  quality: 70,
+  width: 828,
 })
 ---
 
@@ -34,8 +48,13 @@ const optimizedSp = await getImage({
         sizes="100vw"
         type="image/webp"
       />
+      <!--
+        ファーストビュー全面の背景画像。遅延読み込みが基本方針の画像要素の中で、
+        ここだけ loading="eager" + fetchpriority="high" にしている例外 (#20)。
+        画面上端に表示されるため lazy にすると初期表示が遅れる。
+      -->
       <img
-        src={fvSp.src}
+        src={fallbackSp.src}
         alt="Background"
         class="animate-img-reveal h-full w-full object-cover"
         loading="eager"
