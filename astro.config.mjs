@@ -16,6 +16,17 @@ export default defineConfig({
 
   integrations: [react(), sitemap()],
 
+  build: {
+    /**
+     * 全ページ共通 CSS (gzip 約 5 KB) を HTML にインライン化する。
+     * トップページの LCP 要素はヘッダーのテキストで、外部 CSS の取得完了が
+     * そのまま LCP になっていた (#39)。インライン化で追加ラウンドトリップを
+     * 消し、LCP / FCP を約 560 ms 短縮する。
+     * HTML は Cloudflare が zstd 圧縮するため実転送増は小さい。
+     */
+    inlineStylesheets: 'always',
+  },
+
   /**
    * 旧サイト (portfolio-react) の URL 構造からの移行用リダイレクト。
    * 静的ビルドのため meta refresh + canonical を持つ HTML が生成される
